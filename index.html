@@ -870,9 +870,8 @@
             <strong>TL;DR</strong>
             <p>
               POISE asks how the actor's internal representations can be folded back into RL
-              training: it uses hidden states from the model's own generation process to estimate
-              expected reward, making policy updates more stable without a separate critic or many
-              extra samples.
+              training: it turns hidden states from the model's own generation process into a
+              baseline function for RL updates, without a separate critic or many extra samples.
             </p>
           </div>
 
@@ -896,9 +895,9 @@
           <p class="eyebrow">Introduction</p>
           <h2>Why internal value estimation matters</h2>
           <p class="lead">
-            A good baseline keeps RL updates from overreacting to one lucky or unlucky sample.
-            POISE replaces expensive baselines with a lightweight estimator trained on hidden states
-            and entropy statistics that the actor already computes during generation.
+            A good baseline function keeps RL updates from overreacting to one lucky or unlucky
+            sample. POISE replaces expensive baselines with a lightweight estimator trained on
+            hidden states and entropy statistics that the actor already computes during generation.
           </p>
         </div>
 
