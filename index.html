@@ -332,6 +332,12 @@
         border-bottom: 1px solid var(--border);
       }
 
+      #probe,
+      #method {
+        padding-right: max(22px, calc((100vw - 1180px) / 2));
+        padding-left: max(22px, calc((100vw - 1180px) / 2));
+      }
+
       .section-title {
         margin: 0 auto 24px;
         text-align: center;
@@ -406,7 +412,7 @@
 
       .method-grid {
         display: grid;
-        grid-template-columns: minmax(0, 0.64fr) minmax(280px, 0.36fr);
+        grid-template-columns: minmax(0, 0.7fr) minmax(280px, 0.3fr);
         gap: 28px;
         align-items: start;
         margin-top: 28px;
@@ -727,7 +733,7 @@
       .estimator-grid,
       .code-grid {
         display: grid;
-        grid-template-columns: minmax(0, 0.58fr) minmax(280px, 0.42fr);
+        grid-template-columns: minmax(0, 0.68fr) minmax(280px, 0.32fr);
         gap: 28px;
         align-items: start;
         margin-top: 28px;
@@ -894,14 +900,6 @@
             already computes during generation.
           </p>
         </div>
-
-        <figure class="figure wide-figure">
-          <img src="assets/poise-overview.png" alt="Overview of POISE cross-rollout value estimation">
-          <figcaption class="caption">
-            POISE samples two independent rollouts for the same prompt and swaps their value estimates.
-            This keeps the baseline useful for variance reduction without letting a rollout directly judge itself.
-          </figcaption>
-        </figure>
 
         <div class="cards">
           <article class="card">
@@ -1071,7 +1069,7 @@
               <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>49h</span></div>
             </div>
             <div class="metric-block">
-              <div class="metric-heading"><span>DeepSeek 1.5B on 1x B200</span><span>time</span></div>
+              <div class="metric-heading"><span>DeepSeek 1.5B</span><span>time</span></div>
               <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 75%"></div></div><span>18h</span></div>
               <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>24h</span></div>
             </div>
