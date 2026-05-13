@@ -283,21 +283,6 @@
         font-size: 17px;
       }
 
-      .teaser {
-        max-width: 1120px;
-        margin: 32px auto 0;
-        overflow: hidden;
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        background: #fff;
-        box-shadow: var(--shadow);
-      }
-
-      .teaser img {
-        width: 100%;
-        padding: clamp(14px, 2vw, 24px);
-      }
-
       .caption {
         margin: 0;
         padding: 13px 18px 16px;
@@ -876,8 +861,9 @@
           <div class="tldr">
             <strong>TL;DR</strong>
             <p>
-              POISE folds the actor model's own hidden states back into RL training as a lightweight
-              value signal.
+              POISE makes RL training cheaper and less noisy by using the model's own hidden states
+              to estimate expected reward, instead of training a separate critic or sampling many
+              extra answers.
             </p>
           </div>
 
@@ -885,41 +871,36 @@
             <h2>What is this paper about?</h2>
             <p>
               Reinforcement learning with verifiable rewards trains language models from outcome
-              feedback, such as whether a final math answer is correct. This feedback is powerful,
-              but high variance: two responses to the same prompt may receive very different rewards,
-              and noisy updates can make training unstable. Existing methods reduce this variance by
-              estimating a baseline, either with a separate critic model or with multiple rollouts from
-              the same prompt. POISE studies how to mix the actor's internal representations into
-              RL training itself: it trains a lightweight value estimator on hidden states and entropy
-              statistics produced during the actor's own forward pass, then uses a cross-rollout
-              construction to keep the policy-gradient update unbiased. The main math evaluation
-              reports Avg@32 over AMC, AIME, HMMT, and BRUMO benchmarks, so each score is an
-              average pass-rate estimate from 32 sampled answers per problem rather than a single
-              deterministic run.
+              feedback, such as whether a final math answer is correct. This feedback is powerful but
+              noisy: two responses to the same prompt may receive very different rewards, and noisy
+              updates can make training unstable. Existing methods reduce this noise by estimating a
+              baseline, either with a separate critic model or with multiple rollouts from the same
+              prompt. POISE studies how to use the actor's own hidden states for that baseline, so the
+              training loop can use information the model already computed while generating its answer.
             </p>
           </div>
-
-          <figure class="teaser">
-            <img src="assets/poise-overview.png" alt="Overview of POISE cross-rollout value estimation">
-            <figcaption class="caption">
-              POISE samples two independent rollouts for the same prompt and swaps their value estimates.
-              This keeps the baseline useful for variance reduction without letting a rollout directly judge itself.
-            </figcaption>
-          </figure>
         </div>
       </section>
 
-      <section id="abstract">
+      <section id="introduction">
         <div class="section-title">
-          <p class="eyebrow">Abstract</p>
+          <p class="eyebrow">Introduction</p>
           <h2>Why internal value estimation matters</h2>
           <p class="lead">
-            RL with verifiable rewards needs a baseline: an estimate of how much reward the model
-            should expect for a prompt. A good baseline makes learning less noisy. POISE replaces
-            expensive baselines with a lightweight estimator trained on signals already computed by
-            the actor during generation.
+            A good baseline makes RL updates less noisy. POISE replaces expensive baselines with a
+            lightweight estimator trained on hidden states and entropy statistics that the actor
+            already computes during generation.
           </p>
         </div>
+
+        <figure class="figure wide-figure">
+          <img src="assets/poise-overview.png" alt="Overview of POISE cross-rollout value estimation">
+          <figcaption class="caption">
+            POISE samples two independent rollouts for the same prompt and swaps their value estimates.
+            This keeps the baseline useful for variance reduction without letting a rollout directly judge itself.
+          </figcaption>
+        </figure>
+
         <div class="cards">
           <article class="card">
             <h3>No separate critic model</h3>
