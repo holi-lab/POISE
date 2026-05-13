@@ -331,6 +331,23 @@
         font-size: 13px;
       }
 
+      .quick-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.48;
+      }
+
+      .quick-card .pair + p {
+        margin-top: 10px;
+      }
+
+      .quick-card em {
+        color: var(--text);
+        font-style: normal;
+        font-weight: 800;
+      }
+
       .pair {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -352,6 +369,52 @@
         font-weight: 800;
         letter-spacing: 0.04em;
         text-transform: uppercase;
+      }
+
+      .tldr {
+        max-width: 940px;
+        margin: 30px auto 0;
+        padding: 20px 24px;
+        border: 1px solid #bfdbfe;
+        border-left: 5px solid var(--primary);
+        border-radius: var(--radius);
+        background: #eff6ff;
+        text-align: left;
+      }
+
+      .tldr strong {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--primary-hover);
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .tldr p {
+        margin: 0;
+        color: #1e3a8a;
+        font-size: 17px;
+        line-height: 1.62;
+      }
+
+      .dataset-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+      }
+
+      .dataset-list span {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        padding: 0 8px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
       }
 
       section {
@@ -537,6 +600,103 @@
         line-height: 1.52;
       }
 
+      .note-box {
+        max-width: 940px;
+        margin: 24px auto 0;
+        padding: 18px 20px;
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--purple);
+        border-radius: var(--radius);
+        background: #fff;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .note-box strong {
+        color: var(--text);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin-top: 24px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: #fff;
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 760px;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--surface);
+        color: var(--text);
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      td {
+        color: var(--muted);
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      td strong {
+        color: var(--text);
+      }
+
+      .score-poise {
+        color: var(--primary);
+        font-weight: 850;
+      }
+
+      .score-dapo {
+        color: var(--purple);
+        font-weight: 850;
+      }
+
+      .analysis-stack {
+        display: grid;
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .analysis-card {
+        padding: 20px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: #fff;
+      }
+
+      .analysis-card h3 {
+        margin: 0 0 8px;
+        color: var(--text);
+        font-size: 18px;
+      }
+
+      .analysis-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.58;
+      }
+
       .wide-figure {
         margin-top: 24px;
       }
@@ -653,6 +813,7 @@
       </a>
       <nav class="nav" aria-label="Page navigation">
         <a href="#plain">Overview</a>
+        <a href="#probe">Probe</a>
         <a href="#method">Method</a>
         <a href="#results">Results</a>
         <a href="#analysis">Analysis</a>
@@ -679,6 +840,16 @@
             <a class="button secondary" href="#cite">BibTeX</a>
           </div>
 
+          <div class="tldr">
+            <strong>TL;DR</strong>
+            <p>
+              POISE asks how the actor model's internal representations can be folded back into RL
+              training. Instead of treating hidden states only as something to analyze after training,
+              it uses them as a lightweight value signal during training, then uses a cross-rollout
+              design so that signal reduces variance without biasing the policy-gradient update.
+            </p>
+          </div>
+
           <div class="plain-summary" id="plain">
             <h2>What is this paper about?</h2>
             <p>
@@ -687,10 +858,10 @@
               but high variance: two responses to the same prompt may receive very different rewards,
               and noisy updates can make training unstable. Existing methods reduce this variance by
               estimating a baseline, either with a separate critic model or with multiple rollouts from
-              the same prompt. POISE studies whether the actor model already contains enough
-              information to estimate this baseline itself. It trains a lightweight value estimator on
-              hidden states and entropy statistics produced during the actor's own forward pass, then
-              uses a cross-rollout construction to keep the policy-gradient update unbiased.
+              the same prompt. POISE studies how to mix the actor's internal representations into
+              RL training itself: it trains a lightweight value estimator on hidden states and entropy
+              statistics produced during the actor's own forward pass, then uses a cross-rollout
+              construction to keep the policy-gradient update unbiased.
             </p>
           </div>
 
@@ -702,34 +873,38 @@
             </figcaption>
           </figure>
 
-          <div class="quick-results" aria-label="POISE and DAPO comparison highlights">
+          <div class="quick-results" aria-label="POISE benchmark context and DAPO comparison highlights">
             <div class="quick-card">
-              <strong>Qwen3-4B Avg@32</strong>
-              <div class="pair">
-                <div><b>0.500</b><span>POISE</span></div>
-                <div><b>0.508</b><span>DAPO</span></div>
+              <strong>What Avg@32 means</strong>
+              <p>
+                For each math problem, the model samples 32 answers. The score estimates how often
+                those sampled answers are correct.
+              </p>
+            </div>
+            <div class="quick-card">
+              <strong>Benchmark suite</strong>
+              <p>Olympiad-style math reasoning tasks spanning AMC, AIME, HMMT, and BRUMO.</p>
+              <div class="dataset-list">
+                <span>AMC23/24</span>
+                <span>AIME24/25/26</span>
+                <span>HMMT25</span>
+                <span>BRUMO25</span>
               </div>
             </div>
             <div class="quick-card">
-              <strong>DeepSeek 1.5B Avg@32</strong>
-              <div class="pair">
-                <div><b>0.303</b><span>POISE</span></div>
-                <div><b>0.296</b><span>DAPO</span></div>
-              </div>
+              <strong>SOTA baseline</strong>
+              <p>
+                <em>DAPO</em> is a state-of-the-art GRPO-based RLVR algorithm for mathematical
+                reasoning, so matching it is a strong comparison.
+              </p>
             </div>
             <div class="quick-card">
-              <strong>Qwen3-4B Time</strong>
+              <strong>Headline result</strong>
               <div class="pair">
-                <div><b>36h</b><span>POISE</span></div>
-                <div><b>49h</b><span>DAPO</span></div>
+                <div><b>0.500</b><span>POISE Qwen3-4B</span></div>
+                <div><b>0.508</b><span>DAPO Qwen3-4B</span></div>
               </div>
-            </div>
-            <div class="quick-card">
-              <strong>DeepSeek 1.5B Time</strong>
-              <div class="pair">
-                <div><b>18h</b><span>POISE</span></div>
-                <div><b>24h</b><span>DAPO</span></div>
-              </div>
+              <p>Comparable Avg@32, with lower reported wall-clock cost.</p>
             </div>
           </div>
         </div>
@@ -759,6 +934,46 @@
             <h3>Stable online learning</h3>
             <p>The estimator is updated as the policy changes, using current and recent rollouts.</p>
           </article>
+        </div>
+      </section>
+
+      <section id="probe">
+        <div class="section-title">
+          <p class="eyebrow">Preliminary</p>
+          <h2>Does the actor already know its own expected reward?</h2>
+          <p class="lead">
+            Before using internal states inside RL training, the paper first asks whether those states
+            can predict a prompt's value at all. On held-out DAPO-Math rollouts, a lightweight probe
+            trained on hidden states and entropy is compared against a separately trained policy-scale critic.
+          </p>
+        </div>
+
+        <div class="estimator-grid">
+          <figure class="figure">
+            <img src="assets/value-estimation.png" alt="Preliminary value-estimation comparison between POISE probe and critic">
+            <figcaption class="caption">
+              Preliminary value-prediction experiment. Predictions are compared against empirical
+              Avg@8 pass rates on held-out prompts.
+            </figcaption>
+          </figure>
+          <div class="analysis-stack">
+            <article class="analysis-card">
+              <h3>Internal states are predictive</h3>
+              <p>
+                The internal-state probe reaches Pearson r = 0.870 and MAE = 0.141 on the
+                preliminary benchmark, indicating that verifier-reward information is accessible
+                from the actor's own forward-pass signals.
+              </p>
+            </article>
+            <article class="analysis-card">
+              <h3>Competitive with a large critic</h3>
+              <p>
+                The comparison critic is finetuned from Qwen3-4B, but reports r = 0.676 and
+                MAE = 0.262 in the same setting. POISE therefore starts from a simple observation:
+                the actor already carries a useful value signal.
+              </p>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -819,9 +1034,18 @@
           <p class="eyebrow">Results</p>
           <h2>Comparable accuracy with less wall-clock time</h2>
           <p class="lead">
-            POISE is not presented as a method that always beats DAPO in accuracy. The main result is
-            that it reaches similar benchmark performance while using a cheaper baseline mechanism.
+            The headline Avg@32 numbers summarize a suite of olympiad-level math benchmarks, not
+            a single task. POISE is compared against DAPO, a state-of-the-art GRPO-based RLVR method
+            for mathematical reasoning.
           </p>
+        </div>
+
+        <div class="note-box">
+          <strong>Why DAPO matters as a baseline.</strong>
+          DAPO improves group-relative RLVR training by using dynamic sampling and strong math-RL
+          training recipes. It does not train a separate critic, but it still spends rollouts to estimate
+          group-relative baselines. POISE targets the same role with an internal-state value estimator,
+          so the comparison is against a strong SOTA-style baseline rather than a weak reference method.
         </div>
 
         <div class="result-grid">
@@ -829,7 +1053,7 @@
             <h3>Qwen3-4B Avg@32</h3>
             <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 98.4%"></div></div><span>0.500</span></div>
             <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>0.508</span></div>
-            <p>DAPO is slightly higher on the overall average; POISE wins on AMC23, HMMT25, and BRUMO25.</p>
+            <p>DAPO is slightly higher on the overall average; POISE is higher on AMC23, HMMT25, and BRUMO25.</p>
           </article>
 
           <article class="result-card">
@@ -854,6 +1078,69 @@
           </article>
         </div>
 
+        <div class="table-wrap" aria-label="Dataset-level Avg@32 comparison">
+          <table>
+            <thead>
+              <tr>
+                <th>Dataset</th>
+                <th>What it represents</th>
+                <th>Qwen3-4B POISE / DAPO</th>
+                <th>DeepSeek 1.5B POISE / DAPO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>AMC23</strong></td>
+                <td>American Mathematics Competitions, 2023 problems.</td>
+                <td><span class="score-poise">0.891</span> / <span class="score-dapo">0.876</span></td>
+                <td><span class="score-poise">0.694</span> / <span class="score-dapo">0.697</span></td>
+              </tr>
+              <tr>
+                <td><strong>AMC24</strong></td>
+                <td>American Mathematics Competitions, 2024 problems.</td>
+                <td><span class="score-poise">0.592</span> / <span class="score-dapo">0.607</span></td>
+                <td><span class="score-poise">0.446</span> / <span class="score-dapo">0.447</span></td>
+              </tr>
+              <tr>
+                <td><strong>AIME24</strong></td>
+                <td>American Invitational Mathematics Examination, 2024.</td>
+                <td><span class="score-poise">0.469</span> / <span class="score-dapo">0.490</span></td>
+                <td><span class="score-poise">0.270</span> / <span class="score-dapo">0.254</span></td>
+              </tr>
+              <tr>
+                <td><strong>AIME25</strong></td>
+                <td>American Invitational Mathematics Examination, 2025.</td>
+                <td><span class="score-poise">0.437</span> / <span class="score-dapo">0.475</span></td>
+                <td><span class="score-poise">0.234</span> / <span class="score-dapo">0.219</span></td>
+              </tr>
+              <tr>
+                <td><strong>AIME26</strong></td>
+                <td>American Invitational Mathematics Examination, 2026.</td>
+                <td><span class="score-poise">0.443</span> / <span class="score-dapo">0.457</span></td>
+                <td><span class="score-poise">0.213</span> / <span class="score-dapo">0.198</span></td>
+              </tr>
+              <tr>
+                <td><strong>HMMT25</strong></td>
+                <td>Harvard-MIT Mathematics Tournament, 2025 problems.</td>
+                <td><span class="score-poise">0.280</span> / <span class="score-dapo">0.267</span></td>
+                <td><span class="score-poise">0.066</span> / <span class="score-dapo">0.065</span></td>
+              </tr>
+              <tr>
+                <td><strong>BRUMO25</strong></td>
+                <td>Olympiad-style benchmark used for harder math-reasoning evaluation.</td>
+                <td><span class="score-poise">0.387</span> / <span class="score-dapo">0.384</span></td>
+                <td><span class="score-poise">0.198</span> / <span class="score-dapo">0.191</span></td>
+              </tr>
+              <tr>
+                <td><strong>Average</strong></td>
+                <td>Mean Avg@32 across the seven reported math benchmarks.</td>
+                <td><span class="score-poise">0.500</span> / <span class="score-dapo">0.508</span></td>
+                <td><span class="score-poise">0.303</span> / <span class="score-dapo">0.296</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <figure class="figure wide-figure">
           <img src="assets/results-dynamics.png" alt="POISE benchmark table and training dynamics">
           <figcaption class="caption">
@@ -865,26 +1152,83 @@
       <section id="analysis">
         <div class="section-title">
           <p class="eyebrow">Analysis</p>
-          <h2>A small probe can act like a critic</h2>
+          <h2>What the estimator is actually learning</h2>
           <p class="lead">
-            The value estimator is trained from the actor's own internal representations. It is much
-            smaller than a policy-scale critic, yet still predicts useful reward baselines.
+            After showing that the probe is reliable enough to use, the paper analyzes why it works:
+            whether it tracks a changing policy, generalizes beyond math, and depends on simple,
+            linearly accessible internal signals.
           </p>
         </div>
 
-        <div class="estimator-grid">
-          <figure class="figure">
-            <img src="assets/value-estimation.png" alt="Value-estimation comparison between POISE probe and critic">
-            <figcaption class="caption">
-              The internal-state estimator predicts empirical verifier reward without adding another
-              language-model-sized network.
-            </figcaption>
-          </figure>
-          <ul class="bullets">
-            <li>Features come from hidden states and entropy statistics already available during generation.</li>
-            <li>The estimator is trained online with a buffer of recent rollouts.</li>
-            <li>The reported variance reduction ratio stays around 30% after the initial phase.</li>
-          </ul>
+        <div class="cards">
+          <article class="card">
+            <h3>Tracks policy drift</h3>
+            <p>
+              Online analyses evaluate the estimator every 10 training steps against empirical Avg@8
+              values from the current actor checkpoint, testing whether it remains useful as the policy changes.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Works beyond math</h3>
+            <p>
+              The same internal-state idea is tested on math, coding, tool-calling, and instruction-following
+              RLVR tasks, suggesting the signal is not just a math benchmark artifact.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Mostly linear signal</h3>
+            <p>
+              Probe ablations show that a linear ridge probe is competitive with larger MLP probes,
+              supporting the claim that value-relevant information is readily accessible.
+            </p>
+          </article>
+        </div>
+
+        <div class="table-wrap" aria-label="Representative value-estimator analysis results">
+          <table>
+            <thead>
+              <tr>
+                <th>Analysis setting</th>
+                <th>Critic</th>
+                <th>Internal-state estimator</th>
+                <th>Interpretation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Qwen3-4B, DAPO-Math</strong></td>
+                <td>MAE 0.262, r 0.676</td>
+                <td>MAE <span class="score-poise">0.141</span>, r <span class="score-poise">0.870</span></td>
+                <td>The preliminary result: internal states predict expected verifier reward better than the policy-scale critic in this setup.</td>
+              </tr>
+              <tr>
+                <td><strong>Qwen3-4B, DeepScaleR</strong></td>
+                <td>MAE 0.393, r 0.384</td>
+                <td>MAE <span class="score-poise">0.231</span>, r <span class="score-poise">0.609</span></td>
+                <td>The signal transfers to another math-reasoning dataset.</td>
+              </tr>
+              <tr>
+                <td><strong>Qwen3-4B, ToolDial</strong></td>
+                <td>MAE 0.303, r 0.440</td>
+                <td>MAE <span class="score-poise">0.188</span>, r <span class="score-poise">0.840</span></td>
+                <td>The estimator remains useful in a tool-calling RLVR domain.</td>
+              </tr>
+              <tr>
+                <td><strong>Qwen3-4B, IF-RLVR</strong></td>
+                <td>MAE 0.350, r 0.150</td>
+                <td>MAE <span class="score-poise">0.195</span>, r <span class="score-poise">0.642</span></td>
+                <td>The actor's internal states also expose value signal for instruction-following rewards.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note-box">
+          <strong>Bottom line.</strong>
+          The preliminary section establishes that the probe is accurate enough to motivate the method.
+          The analysis section then asks a broader question: which internal signals make that possible,
+          whether the estimator survives online policy drift, and whether the same idea works outside
+          the main math-training experiment.
         </div>
       </section>
 
