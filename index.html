@@ -879,13 +879,13 @@
             <h2>What is this paper about?</h2>
             <p>
               Reinforcement learning with verifiable rewards trains language models from outcome
-              feedback, such as whether a final math answer is correct. This feedback is useful, but
-              each sampled answer gives only one outcome, so the policy update can depend too much
-              on which completion happened to be sampled. Existing methods address this by
-              estimating a baseline, either with a separate critic model or with multiple rollouts from
-              the same prompt. POISE studies how to use the actor's own hidden states for that
-              baseline, so the training loop can use information the model already computed while
-              generating its answer.
+              feedback, such as whether a final math answer is correct. To turn those raw rewards
+              into useful policy-gradient updates, RL methods usually subtract a baseline, so the
+              update reflects whether a response did better or worse than expected for the prompt.
+              Existing methods estimate that baseline either with a separate critic model or with
+              multiple rollouts from the same prompt. POISE studies how to use the actor's own
+              hidden states for that baseline, so the training loop can use information the model
+              already computed while generating its answer.
             </p>
           </div>
         </div>
@@ -896,9 +896,10 @@
           <p class="eyebrow">Introduction</p>
           <h2>Why internal value estimation matters</h2>
           <p class="lead">
-            A good baseline function keeps RL updates from overreacting to one lucky or unlucky
-            sample. POISE replaces expensive baselines with a lightweight estimator trained on
-            hidden states and entropy statistics that the actor already computes during generation.
+            A good baseline function converts raw rewards into advantages by comparing each
+            response with the reward expected for its prompt. POISE replaces expensive baselines
+            with a lightweight estimator trained on hidden states and entropy statistics that the
+            actor already computes during generation.
           </p>
         </div>
 
