@@ -72,6 +72,8 @@
         --border: #e2e8f0;
         --success: #0f766e;
         --purple: #6d5bd0;
+        --ours: #16a34a;
+        --opponent: #dc2626;
         --radius: 14px;
         --shadow: 0 18px 48px rgba(15, 23, 42, 0.12);
       }
@@ -489,11 +491,11 @@
       .bar {
         height: 100%;
         border-radius: inherit;
-        background: var(--primary);
+        background: var(--ours);
       }
 
       .bar.dapo {
-        background: var(--purple);
+        background: var(--opponent);
       }
 
       .result-card p {
@@ -681,11 +683,11 @@
       }
 
       .compare-fill.poise {
-        background: var(--primary);
+        background: var(--ours);
       }
 
       .compare-fill.critic {
-        background: var(--purple);
+        background: var(--opponent);
       }
 
       .legend {
@@ -711,11 +713,11 @@
       }
 
       .legend .poise-dot {
-        background: var(--primary);
+        background: var(--ours);
       }
 
       .legend .critic-dot {
-        background: var(--purple);
+        background: var(--opponent);
       }
 
       .wide-figure {
