@@ -879,12 +879,13 @@
             <h2>What is this paper about?</h2>
             <p>
               Reinforcement learning with verifiable rewards trains language models from outcome
-              feedback, such as whether a final math answer is correct. This feedback is powerful but
-              noisy: two responses to the same prompt may receive very different rewards, and noisy
-              updates can make training unstable. Existing methods reduce this noise by estimating a
-              baseline, either with a separate critic model or with multiple rollouts from the same
-              prompt. POISE studies how to use the actor's own hidden states for that baseline, so the
-              training loop can use information the model already computed while generating its answer.
+              feedback, such as whether a final math answer is correct. This feedback is useful, but
+              each sampled answer gives only one outcome, so the policy update can depend too much
+              on which completion happened to be sampled. Existing methods address this by
+              estimating a baseline, either with a separate critic model or with multiple rollouts from
+              the same prompt. POISE studies how to use the actor's own hidden states for that
+              baseline, so the training loop can use information the model already computed while
+              generating its answer.
             </p>
           </div>
         </div>
