@@ -308,78 +308,6 @@
         text-align: left;
       }
 
-      .quick-results {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 13px;
-        max-width: 1120px;
-        margin: 18px auto 0;
-      }
-
-      .quick-card {
-        padding: 16px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: #fff;
-        text-align: left;
-      }
-
-      .quick-card strong {
-        display: block;
-        margin-bottom: 10px;
-        color: var(--text);
-        font-size: 13px;
-      }
-
-      .quick-card p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.48;
-      }
-
-      .quick-card .pair + p {
-        margin-top: 10px;
-      }
-
-      .quick-card em {
-        color: var(--text);
-        font-style: normal;
-        font-weight: 800;
-      }
-
-      .benchmark-note {
-        max-width: 940px;
-        margin: 24px auto 0;
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.65;
-        text-align: left;
-      }
-
-      .pair {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 9px;
-      }
-
-      .pair b {
-        display: block;
-        color: var(--primary);
-        font-size: 25px;
-        line-height: 1;
-      }
-
-      .pair span {
-        display: block;
-        margin-top: 5px;
-        color: var(--light);
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-      }
-
       .tldr {
         max-width: 940px;
         margin: 30px auto 0;
@@ -590,6 +518,28 @@
         line-height: 1.52;
       }
 
+      .metric-block {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+
+      .metric-heading {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 850;
+      }
+
+      .metric-heading span:last-child {
+        color: var(--muted);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
       .note-box {
         max-width: 940px;
         margin: 24px auto 0;
@@ -607,57 +557,48 @@
         color: var(--text);
       }
 
-      .table-wrap {
-        overflow-x: auto;
-        margin-top: 24px;
+      .benchmark-suite {
+        display: grid;
+        grid-template-columns: minmax(0, 0.54fr) minmax(280px, 0.46fr);
+        gap: 18px;
+        align-items: center;
+        margin-top: 28px;
+        padding: 20px;
         border: 1px solid var(--border);
         border-radius: var(--radius);
         background: #fff;
-        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
       }
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 760px;
-        font-size: 13px;
+      .benchmark-suite strong {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--text);
+        font-size: 18px;
       }
 
-      th,
-      td {
-        padding: 12px 14px;
-        border-bottom: 1px solid var(--border);
-        text-align: left;
-        vertical-align: top;
+      .benchmark-suite p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.58;
       }
 
-      th {
+      .suite-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .suite-tags span {
+        display: inline-flex;
+        align-items: center;
+        min-height: 32px;
+        padding: 0 12px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
         background: var(--surface);
         color: var(--text);
         font-size: 12px;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-      }
-
-      td {
-        color: var(--muted);
-      }
-
-      tr:last-child td {
-        border-bottom: 0;
-      }
-
-      td strong {
-        color: var(--text);
-      }
-
-      .score-poise {
-        color: var(--primary);
-        font-weight: 850;
-      }
-
-      .score-dapo {
-        color: var(--purple);
         font-weight: 850;
       }
 
@@ -685,6 +626,111 @@
         color: var(--muted);
         font-size: 15px;
         line-height: 1.58;
+      }
+
+      .visual-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .chart-card {
+        padding: 20px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: #fff;
+      }
+
+      .chart-card h3 {
+        margin: 0;
+        color: var(--text);
+        font-size: 18px;
+      }
+
+      .chart-card > p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .chart-row {
+        margin-top: 16px;
+      }
+
+      .chart-label {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .compare-bars {
+        display: grid;
+        gap: 6px;
+        margin-top: 7px;
+      }
+
+      .compare-bar {
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr) 46px;
+        gap: 8px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .compare-track {
+        overflow: hidden;
+        height: 10px;
+        border-radius: 999px;
+        background: #e5e7eb;
+      }
+
+      .compare-fill {
+        height: 100%;
+        border-radius: inherit;
+      }
+
+      .compare-fill.poise {
+        background: var(--primary);
+      }
+
+      .compare-fill.critic {
+        background: var(--purple);
+      }
+
+      .legend {
+        display: flex;
+        gap: 14px;
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .legend i {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .legend .poise-dot {
+        background: var(--primary);
+      }
+
+      .legend .critic-dot {
+        background: var(--purple);
       }
 
       .wide-figure {
@@ -760,13 +806,11 @@
           flex-direction: column;
         }
 
-        .quick-results {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
         .cards,
         .method-grid,
         .result-grid,
+        .benchmark-suite,
+        .visual-grid,
         .estimator-grid,
         .code-grid {
           grid-template-columns: 1fr;
@@ -778,8 +822,7 @@
           padding-top: 44px;
         }
 
-        .links,
-        .quick-results {
+        .links {
           display: grid;
           grid-template-columns: 1fr;
         }
@@ -803,7 +846,7 @@
       </a>
       <nav class="nav" aria-label="Page navigation">
         <a href="#plain">Overview</a>
-        <a href="#probe">Probe</a>
+        <a href="#probe">Preliminary</a>
         <a href="#method">Method</a>
         <a href="#results">Results</a>
         <a href="#analysis">Analysis</a>
@@ -863,48 +906,6 @@
               This keeps the baseline useful for variance reduction without letting a rollout directly judge itself.
             </figcaption>
           </figure>
-
-          <p class="benchmark-note">
-            The comparison is intentionally against DAPO, a state-of-the-art GRPO-based RLVR method
-            for mathematical reasoning. The question is not whether POISE wins every individual
-            dataset, but whether internal-state value estimation can reach the same regime while
-            reducing the cost of baseline estimation.
-          </p>
-
-          <div class="quick-results" aria-label="POISE and DAPO comparison highlights">
-            <div class="quick-card">
-              <strong>Qwen3-4B Avg@32</strong>
-              <div class="pair">
-                <div><b>0.500</b><span>POISE</span></div>
-                <div><b>0.508</b><span>DAPO</span></div>
-              </div>
-              <p>Average over seven olympiad-level math benchmarks.</p>
-            </div>
-            <div class="quick-card">
-              <strong>DeepSeek 1.5B Avg@32</strong>
-              <div class="pair">
-                <div><b>0.303</b><span>POISE</span></div>
-                <div><b>0.296</b><span>DAPO</span></div>
-              </div>
-              <p>POISE is slightly higher on the reported benchmark average.</p>
-            </div>
-            <div class="quick-card">
-              <strong>Qwen3-4B Time</strong>
-              <div class="pair">
-                <div><b>36h</b><span>POISE</span></div>
-                <div><b>49h</b><span>DAPO</span></div>
-              </div>
-              <p>Reported wall-clock time on two B200 GPUs.</p>
-            </div>
-            <div class="quick-card">
-              <strong>DeepSeek 1.5B Time</strong>
-              <div class="pair">
-                <div><b>18h</b><span>POISE</span></div>
-                <div><b>24h</b><span>DAPO</span></div>
-              </div>
-              <p>Reported wall-clock time on one B200 GPU.</p>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -938,11 +939,11 @@
       <section id="probe">
         <div class="section-title">
           <p class="eyebrow">Preliminary</p>
-          <h2>Does the actor already know its own expected reward?</h2>
+          <h2>Internal states carry a usable value signal</h2>
           <p class="lead">
-            Before using internal states inside RL training, the paper first asks whether those states
-            can predict a prompt's value at all. On held-out DAPO-Math rollouts, a lightweight probe
-            trained on hidden states and entropy is compared against a separately trained policy-scale critic.
+            Before using internal states inside RL training, POISE first tests whether they can support
+            prompt-level value estimation. On held-out DAPO-Math rollouts, a lightweight probe trained
+            on hidden states and entropy is compared against a separately trained policy-scale critic.
           </p>
         </div>
 
@@ -1039,104 +1040,59 @@
           </p>
         </div>
 
-        <div class="note-box">
-          DAPO does not train a separate critic; instead, it improves group-relative RLVR with dynamic
-          sampling and strong math-RL training recipes. POISE targets the same baseline-estimation
-          bottleneck from a different direction, replacing repeated same-prompt evidence with a value
-          estimate from the actor's internal states.
+        <div class="benchmark-suite">
+          <div>
+            <strong>Benchmark suite</strong>
+            <p>
+              The reported math suite spans olympiad-style reasoning problems from AMC, AIME,
+              HMMT, and BRUMO. DAPO does not train a separate critic; POISE targets the same
+              baseline-estimation bottleneck from the actor's internal states.
+            </p>
+          </div>
+          <div class="suite-tags" aria-label="Reported math benchmarks">
+            <span>AMC23/24</span>
+            <span>AIME24/25/26</span>
+            <span>HMMT25</span>
+            <span>BRUMO25</span>
+          </div>
         </div>
 
         <div class="result-grid">
           <article class="result-card">
-            <h3>Qwen3-4B Avg@32</h3>
-            <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 98.4%"></div></div><span>0.500</span></div>
-            <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>0.508</span></div>
-            <p>DAPO is slightly higher on the overall average; POISE is higher on AMC23, HMMT25, and BRUMO25.</p>
+            <h3>Accuracy across the suite</h3>
+            <p>
+              The average is not meant to hide dataset-level variation; it summarizes whether POISE
+              reaches the same regime as the SOTA DAPO baseline across the seven reported math tasks.
+            </p>
+            <div class="metric-block">
+              <div class="metric-heading"><span>Qwen3-4B</span><span>Avg@32</span></div>
+              <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 98.4%"></div></div><span>0.500</span></div>
+              <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>0.508</span></div>
+            </div>
+            <div class="metric-block">
+              <div class="metric-heading"><span>DeepSeek-R1-Distill-Qwen-1.5B</span><span>Avg@32</span></div>
+              <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 100%"></div></div><span>0.303</span></div>
+              <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 97.7%"></div></div><span>0.296</span></div>
+            </div>
           </article>
 
           <article class="result-card">
-            <h3>DeepSeek-R1-Distill-Qwen-1.5B Avg@32</h3>
-            <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 100%"></div></div><span>0.303</span></div>
-            <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 97.7%"></div></div><span>0.296</span></div>
-            <p>POISE is slightly higher on the reported benchmark average.</p>
+            <h3>Training cost</h3>
+            <p>
+              DAPO is the harder comparison because it is already a strong GRPO-based RLVR method.
+              POISE aims for comparable accuracy while spending less wall-clock time on baseline estimation.
+            </p>
+            <div class="metric-block">
+              <div class="metric-heading"><span>Qwen3-4B on 2x B200</span><span>time</span></div>
+              <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 73.5%"></div></div><span>36h</span></div>
+              <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>49h</span></div>
+            </div>
+            <div class="metric-block">
+              <div class="metric-heading"><span>DeepSeek 1.5B on 1x B200</span><span>time</span></div>
+              <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 75%"></div></div><span>18h</span></div>
+              <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>24h</span></div>
+            </div>
           </article>
-
-          <article class="result-card">
-            <h3>Qwen3-4B training time</h3>
-            <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 73.5%"></div></div><span>36h</span></div>
-            <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>49h</span></div>
-            <p>Wall-clock time on two B200 GPUs in the reported setup.</p>
-          </article>
-
-          <article class="result-card">
-            <h3>DeepSeek 1.5B training time</h3>
-            <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 75%"></div></div><span>18h</span></div>
-            <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>24h</span></div>
-            <p>POISE reaches the same performance level faster on one B200 GPU.</p>
-          </article>
-        </div>
-
-        <div class="table-wrap" aria-label="Dataset-level Avg@32 comparison">
-          <table>
-            <thead>
-              <tr>
-                <th>Dataset</th>
-                <th>What it represents</th>
-                <th>Qwen3-4B POISE / DAPO</th>
-                <th>DeepSeek 1.5B POISE / DAPO</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>AMC23</strong></td>
-                <td>American Mathematics Competitions, 2023 problems.</td>
-                <td><span class="score-poise">0.891</span> / <span class="score-dapo">0.876</span></td>
-                <td><span class="score-poise">0.694</span> / <span class="score-dapo">0.697</span></td>
-              </tr>
-              <tr>
-                <td><strong>AMC24</strong></td>
-                <td>American Mathematics Competitions, 2024 problems.</td>
-                <td><span class="score-poise">0.592</span> / <span class="score-dapo">0.607</span></td>
-                <td><span class="score-poise">0.446</span> / <span class="score-dapo">0.447</span></td>
-              </tr>
-              <tr>
-                <td><strong>AIME24</strong></td>
-                <td>American Invitational Mathematics Examination, 2024.</td>
-                <td><span class="score-poise">0.469</span> / <span class="score-dapo">0.490</span></td>
-                <td><span class="score-poise">0.270</span> / <span class="score-dapo">0.254</span></td>
-              </tr>
-              <tr>
-                <td><strong>AIME25</strong></td>
-                <td>American Invitational Mathematics Examination, 2025.</td>
-                <td><span class="score-poise">0.437</span> / <span class="score-dapo">0.475</span></td>
-                <td><span class="score-poise">0.234</span> / <span class="score-dapo">0.219</span></td>
-              </tr>
-              <tr>
-                <td><strong>AIME26</strong></td>
-                <td>American Invitational Mathematics Examination, 2026.</td>
-                <td><span class="score-poise">0.443</span> / <span class="score-dapo">0.457</span></td>
-                <td><span class="score-poise">0.213</span> / <span class="score-dapo">0.198</span></td>
-              </tr>
-              <tr>
-                <td><strong>HMMT25</strong></td>
-                <td>Harvard-MIT Mathematics Tournament, 2025 problems.</td>
-                <td><span class="score-poise">0.280</span> / <span class="score-dapo">0.267</span></td>
-                <td><span class="score-poise">0.066</span> / <span class="score-dapo">0.065</span></td>
-              </tr>
-              <tr>
-                <td><strong>BRUMO25</strong></td>
-                <td>Olympiad-style benchmark used for harder math-reasoning evaluation.</td>
-                <td><span class="score-poise">0.387</span> / <span class="score-dapo">0.384</span></td>
-                <td><span class="score-poise">0.198</span> / <span class="score-dapo">0.191</span></td>
-              </tr>
-              <tr>
-                <td><strong>Average</strong></td>
-                <td>Mean Avg@32 across the seven reported math benchmarks.</td>
-                <td><span class="score-poise">0.500</span> / <span class="score-dapo">0.508</span></td>
-                <td><span class="score-poise">0.303</span> / <span class="score-dapo">0.296</span></td>
-              </tr>
-            </tbody>
-          </table>
         </div>
 
         <figure class="figure wide-figure">
@@ -1182,43 +1138,74 @@
           </article>
         </div>
 
-        <div class="table-wrap" aria-label="Representative value-estimator analysis results">
-          <table>
-            <thead>
-              <tr>
-                <th>Analysis setting</th>
-                <th>Critic</th>
-                <th>Internal-state estimator</th>
-                <th>Interpretation</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Qwen3-4B, DAPO-Math</strong></td>
-                <td>MAE 0.262, r 0.676</td>
-                <td>MAE <span class="score-poise">0.141</span>, r <span class="score-poise">0.870</span></td>
-                <td>The preliminary result: internal states predict expected verifier reward better than the policy-scale critic in this setup.</td>
-              </tr>
-              <tr>
-                <td><strong>Qwen3-4B, DeepScaleR</strong></td>
-                <td>MAE 0.393, r 0.384</td>
-                <td>MAE <span class="score-poise">0.231</span>, r <span class="score-poise">0.609</span></td>
-                <td>The signal transfers to another math-reasoning dataset.</td>
-              </tr>
-              <tr>
-                <td><strong>Qwen3-4B, ToolDial</strong></td>
-                <td>MAE 0.303, r 0.440</td>
-                <td>MAE <span class="score-poise">0.188</span>, r <span class="score-poise">0.840</span></td>
-                <td>The estimator remains useful in a tool-calling RLVR domain.</td>
-              </tr>
-              <tr>
-                <td><strong>Qwen3-4B, IF-RLVR</strong></td>
-                <td>MAE 0.350, r 0.150</td>
-                <td>MAE <span class="score-poise">0.195</span>, r <span class="score-poise">0.642</span></td>
-                <td>The actor's internal states also expose value signal for instruction-following rewards.</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="visual-grid" aria-label="Representative value-estimator analysis charts">
+          <article class="chart-card">
+            <h3>Pearson correlation</h3>
+            <p>Higher is better. Qwen3-4B value prediction across RLVR domains.</p>
+            <div class="chart-row">
+              <div class="chart-label"><span>DAPO-Math</span><span>r</span></div>
+              <div class="compare-bars">
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 87%"></div></div><span>0.870</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 67.6%"></div></div><span>0.676</span></div>
+              </div>
+            </div>
+            <div class="chart-row">
+              <div class="chart-label"><span>DeepScaleR</span><span>r</span></div>
+              <div class="compare-bars">
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 60.9%"></div></div><span>0.609</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 38.4%"></div></div><span>0.384</span></div>
+              </div>
+            </div>
+            <div class="chart-row">
+              <div class="chart-label"><span>ToolDial</span><span>r</span></div>
+              <div class="compare-bars">
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 84%"></div></div><span>0.840</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 44%"></div></div><span>0.440</span></div>
+              </div>
+            </div>
+            <div class="chart-row">
+              <div class="chart-label"><span>IF-RLVR</span><span>r</span></div>
+              <div class="compare-bars">
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 64.2%"></div></div><span>0.642</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 15%"></div></div><span>0.150</span></div>
+              </div>
+            </div>
+            <div class="legend"><span><i class="poise-dot"></i>Internal-state probe</span><span><i class="critic-dot"></i>Critic</span></div>
+          </article>
+
+          <article class="chart-card">
+            <h3>Mean absolute error</h3>
+            <p>Lower is better. Shorter bars mean smaller prediction error.</p>
+            <div class="chart-row">
+              <div class="chart-label"><span>DAPO-Math</span><span>MAE</span></div>
+              <div class="compare-bars">
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 35.3%"></div></div><span>0.141</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 65.5%"></div></div><span>0.262</span></div>
+              </div>
+            </div>
+            <div class="chart-row">
+              <div class="chart-label"><span>DeepScaleR</span><span>MAE</span></div>
+              <div class="compare-bars">
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 57.8%"></div></div><span>0.231</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 98.3%"></div></div><span>0.393</span></div>
+              </div>
+            </div>
+            <div class="chart-row">
+              <div class="chart-label"><span>ToolDial</span><span>MAE</span></div>
+              <div class="compare-bars">
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 47%"></div></div><span>0.188</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 75.8%"></div></div><span>0.303</span></div>
+              </div>
+            </div>
+            <div class="chart-row">
+              <div class="chart-label"><span>IF-RLVR</span><span>MAE</span></div>
+              <div class="compare-bars">
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 48.8%"></div></div><span>0.195</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 87.5%"></div></div><span>0.350</span></div>
+              </div>
+            </div>
+            <div class="legend"><span><i class="poise-dot"></i>Internal-state probe</span><span><i class="critic-dot"></i>Critic</span></div>
+          </article>
         </div>
 
         <div class="note-box">
