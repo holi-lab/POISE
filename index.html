@@ -861,9 +861,9 @@
           <div class="tldr">
             <strong>TL;DR</strong>
             <p>
-              POISE makes RL training cheaper and less noisy by using the model's own hidden states
-              to estimate expected reward, instead of training a separate critic or sampling many
-              extra answers.
+              POISE asks how the actor's internal representations can be folded back into RL
+              training: it uses hidden states from the model's own generation process to estimate
+              expected reward, reducing noise without a separate critic or many extra samples.
             </p>
           </div>
 
