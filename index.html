@@ -348,6 +348,15 @@
         font-weight: 800;
       }
 
+      .benchmark-note {
+        max-width: 940px;
+        margin: 24px auto 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.65;
+        text-align: left;
+      }
+
       .pair {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -396,25 +405,6 @@
         color: #1e3a8a;
         font-size: 17px;
         line-height: 1.62;
-      }
-
-      .dataset-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-top: 10px;
-      }
-
-      .dataset-list span {
-        display: inline-flex;
-        align-items: center;
-        min-height: 24px;
-        padding: 0 8px;
-        border-radius: 999px;
-        background: var(--accent);
-        color: var(--muted);
-        font-size: 11px;
-        font-weight: 800;
       }
 
       section {
@@ -843,10 +833,8 @@
           <div class="tldr">
             <strong>TL;DR</strong>
             <p>
-              POISE asks how the actor model's internal representations can be folded back into RL
-              training. Instead of treating hidden states only as something to analyze after training,
-              it uses them as a lightweight value signal during training, then uses a cross-rollout
-              design so that signal reduces variance without biasing the policy-gradient update.
+              POISE folds the actor model's own hidden states back into RL training as a lightweight
+              value signal.
             </p>
           </div>
 
@@ -861,7 +849,10 @@
               the same prompt. POISE studies how to mix the actor's internal representations into
               RL training itself: it trains a lightweight value estimator on hidden states and entropy
               statistics produced during the actor's own forward pass, then uses a cross-rollout
-              construction to keep the policy-gradient update unbiased.
+              construction to keep the policy-gradient update unbiased. The main math evaluation
+              reports Avg@32 over AMC, AIME, HMMT, and BRUMO benchmarks, so each score is an
+              average pass-rate estimate from 32 sampled answers per problem rather than a single
+              deterministic run.
             </p>
           </div>
 
@@ -873,38 +864,45 @@
             </figcaption>
           </figure>
 
-          <div class="quick-results" aria-label="POISE benchmark context and DAPO comparison highlights">
+          <p class="benchmark-note">
+            The comparison is intentionally against DAPO, a state-of-the-art GRPO-based RLVR method
+            for mathematical reasoning. The question is not whether POISE wins every individual
+            dataset, but whether internal-state value estimation can reach the same regime while
+            reducing the cost of baseline estimation.
+          </p>
+
+          <div class="quick-results" aria-label="POISE and DAPO comparison highlights">
             <div class="quick-card">
-              <strong>What Avg@32 means</strong>
-              <p>
-                For each math problem, the model samples 32 answers. The score estimates how often
-                those sampled answers are correct.
-              </p>
-            </div>
-            <div class="quick-card">
-              <strong>Benchmark suite</strong>
-              <p>Olympiad-style math reasoning tasks spanning AMC, AIME, HMMT, and BRUMO.</p>
-              <div class="dataset-list">
-                <span>AMC23/24</span>
-                <span>AIME24/25/26</span>
-                <span>HMMT25</span>
-                <span>BRUMO25</span>
-              </div>
-            </div>
-            <div class="quick-card">
-              <strong>SOTA baseline</strong>
-              <p>
-                <em>DAPO</em> is a state-of-the-art GRPO-based RLVR algorithm for mathematical
-                reasoning, so matching it is a strong comparison.
-              </p>
-            </div>
-            <div class="quick-card">
-              <strong>Headline result</strong>
+              <strong>Qwen3-4B Avg@32</strong>
               <div class="pair">
-                <div><b>0.500</b><span>POISE Qwen3-4B</span></div>
-                <div><b>0.508</b><span>DAPO Qwen3-4B</span></div>
+                <div><b>0.500</b><span>POISE</span></div>
+                <div><b>0.508</b><span>DAPO</span></div>
               </div>
-              <p>Comparable Avg@32, with lower reported wall-clock cost.</p>
+              <p>Average over seven olympiad-level math benchmarks.</p>
+            </div>
+            <div class="quick-card">
+              <strong>DeepSeek 1.5B Avg@32</strong>
+              <div class="pair">
+                <div><b>0.303</b><span>POISE</span></div>
+                <div><b>0.296</b><span>DAPO</span></div>
+              </div>
+              <p>POISE is slightly higher on the reported benchmark average.</p>
+            </div>
+            <div class="quick-card">
+              <strong>Qwen3-4B Time</strong>
+              <div class="pair">
+                <div><b>36h</b><span>POISE</span></div>
+                <div><b>49h</b><span>DAPO</span></div>
+              </div>
+              <p>Reported wall-clock time on two B200 GPUs.</p>
+            </div>
+            <div class="quick-card">
+              <strong>DeepSeek 1.5B Time</strong>
+              <div class="pair">
+                <div><b>18h</b><span>POISE</span></div>
+                <div><b>24h</b><span>DAPO</span></div>
+              </div>
+              <p>Reported wall-clock time on one B200 GPU.</p>
             </div>
           </div>
         </div>
@@ -1034,18 +1032,18 @@
           <p class="eyebrow">Results</p>
           <h2>Comparable accuracy with less wall-clock time</h2>
           <p class="lead">
-            The headline Avg@32 numbers summarize a suite of olympiad-level math benchmarks, not
-            a single task. POISE is compared against DAPO, a state-of-the-art GRPO-based RLVR method
-            for mathematical reasoning.
+            Across AMC23/24, AIME24/25/26, HMMT25, and BRUMO25, Avg@32 estimates pass rate
+            from 32 sampled answers per problem. Against DAPO, a state-of-the-art GRPO-based
+            RLVR method for mathematical reasoning, POISE reaches comparable accuracy while
+            avoiding the same rollout-heavy baseline estimation.
           </p>
         </div>
 
         <div class="note-box">
-          <strong>Why DAPO matters as a baseline.</strong>
-          DAPO improves group-relative RLVR training by using dynamic sampling and strong math-RL
-          training recipes. It does not train a separate critic, but it still spends rollouts to estimate
-          group-relative baselines. POISE targets the same role with an internal-state value estimator,
-          so the comparison is against a strong SOTA-style baseline rather than a weak reference method.
+          DAPO does not train a separate critic; instead, it improves group-relative RLVR with dynamic
+          sampling and strong math-RL training recipes. POISE targets the same baseline-estimation
+          bottleneck from a different direction, replacing repeated same-prompt evidence with a value
+          estimate from the actor's internal states.
         </div>
 
         <div class="result-grid">
