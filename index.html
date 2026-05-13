@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Your Language Model is Its Own Critic | POISE</title>
+    <meta name="description" content="POISE is a reinforcement learning method that estimates value from a language model actor's internal states for efficient reinforcement learning with verifiable rewards." />
+    <meta name="author" content="Yunho Choi, Jongwon Lim, Woojin Ahn, Minjae Oh, Jeonghoon Shim, Yohan Jo" />
+    <link rel="canonical" href="https://holi-lab.github.io/POISE/" />
+    <meta name="robots" content="index, follow" />
+    <meta name="google-site-verification" content="4yOxPwqatc-8zwHa5hb8qj536_st7H5-aqXfuRJt6f0" />
+    <meta name="citation_title" content="Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States" />
+    <meta name="citation_author" content="Yunho Choi" />
+    <meta name="citation_author" content="Jongwon Lim" />
+    <meta name="citation_author" content="Woojin Ahn" />
+    <meta name="citation_author" content="Minjae Oh" />
+    <meta name="citation_author" content="Jeonghoon Shim" />
+    <meta name="citation_author" content="Yohan Jo" />
+    <meta name="citation_publication_date" content="2026" />
+    <meta name="citation_arxiv_id" content="2605.07579" />
+    <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2605.07579" />
+    <meta property="og:title" content="Your Language Model is Its Own Critic | POISE" />
+    <meta property="og:description" content="Reinforcement learning with value estimation from a language model actor's internal states." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://holi-lab.github.io/POISE/" />
+    <meta property="og:image" content="https://holi-lab.github.io/POISE/assets/poise-overview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Your Language Model is Its Own Critic | POISE" />
+    <meta name="twitter:description" content="Reinforcement learning with value estimation from a language model actor's internal states." />
+    <meta name="twitter:image" content="https://holi-lab.github.io/POISE/assets/poise-overview.png" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      "headline": "Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States",
+      "name": "Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States",
+      "datePublished": "2026",
+      "author": [
+        { "@type": "Person", "name": "Yunho Choi" },
+        { "@type": "Person", "name": "Jongwon Lim", "url": "https://elijah0430.github.io/" },
+        { "@type": "Person", "name": "Woojin Ahn" },
+        { "@type": "Person", "name": "Minjae Oh" },
+        { "@type": "Person", "name": "Jeonghoon Shim" },
+        { "@type": "Person", "name": "Yohan Jo", "url": "https://yohanjo.github.io/lab.html" }
+      ],
+      "publisher": {
+        "@type": "Organization",
+        "name": "Human Oriented Language Intelligence Lab, Seoul National University"
+      },
+      "isPartOf": { "@type": "Periodical", "name": "arXiv" },
+      "identifier": "arXiv:2605.07579",
+      "url": "https://holi-lab.github.io/POISE/",
+      "sameAs": "https://arxiv.org/abs/2605.07579",
+      "image": "https://holi-lab.github.io/POISE/assets/poise-overview.png",
+      "about": [
+        "reinforcement learning with verifiable rewards",
+        "language model training",
+        "value estimation"
+      ]
+    }
+    </script>
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --text: #1e293b;
+        --muted: #64748b;
+        --light: #94a3b8;
+        --bg: #ffffff;
+        --surface: #f8fafc;
+        --accent: #f1f5f9;
+        --border: #e2e8f0;
+        --success: #0f766e;
+        --purple: #6d5bd0;
+        --radius: 14px;
+        --shadow: 0 18px 48px rgba(15, 23, 42, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: var(--primary-hover);
+        text-decoration: underline;
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        min-height: 70px;
+        padding: 10px max(22px, calc((100vw - 1120px) / 2));
+        border-bottom: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(14px);
+      }
+
+      .brand {
+        color: var(--text);
+      }
+
+      .brand strong {
+        display: block;
+        font-size: 14px;
+        letter-spacing: 0.04em;
+      }
+
+      .brand span {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.25;
+      }
+
+      .brand b {
+        color: var(--primary);
+        font-weight: 900;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .nav a {
+        color: var(--muted);
+      }
+
+      .hero {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .hero-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 70px 22px 42px;
+        text-align: center;
+      }
+
+      .kicker {
+        margin: 0 0 14px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 960px;
+        margin: 0 auto;
+        color: var(--text);
+        font-size: clamp(42px, 7vw, 74px);
+        font-weight: 820;
+        line-height: 1.04;
+        letter-spacing: -0.02em;
+      }
+
+      .paper-subtitle {
+        max-width: 860px;
+        margin: 18px auto 0;
+        color: #334155;
+        font-size: clamp(20px, 2.5vw, 29px);
+        font-weight: 650;
+        line-height: 1.28;
+      }
+
+      .authors {
+        max-width: 860px;
+        margin: 24px auto 0;
+        color: #334155;
+        font-size: 17px;
+        line-height: 1.55;
+      }
+
+      .authors a {
+        font-weight: 700;
+      }
+
+      .notes {
+        margin: 7px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .links {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 26px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 43px;
+        padding: 0 18px;
+        border-radius: 12px;
+        background: var(--text);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 750;
+        box-shadow: 0 7px 18px rgba(15, 23, 42, 0.14);
+      }
+
+      .button:hover {
+        background: var(--primary);
+        color: #fff;
+        text-decoration: none;
+        transform: translateY(-1px);
+      }
+
+      .button.secondary {
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--primary);
+        box-shadow: none;
+      }
+
+      .button.secondary:hover {
+        background: var(--accent);
+        color: var(--primary-hover);
+      }
+
+      .plain-summary {
+        max-width: 940px;
+        margin: 34px auto 0;
+        padding: clamp(20px, 3vw, 30px);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: #fff;
+        text-align: left;
+        box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+      }
+
+      .plain-summary h2 {
+        margin: 0 0 10px;
+        font-size: 22px;
+      }
+
+      .plain-summary p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 17px;
+      }
+
+      .teaser {
+        max-width: 1120px;
+        margin: 32px auto 0;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: #fff;
+        box-shadow: var(--shadow);
+      }
+
+      .teaser img {
+        width: 100%;
+        padding: clamp(14px, 2vw, 24px);
+      }
+
+      .caption {
+        margin: 0;
+        padding: 13px 18px 16px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+        text-align: left;
+      }
+
+      .quick-results {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 13px;
+        max-width: 1120px;
+        margin: 18px auto 0;
+      }
+
+      .quick-card {
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: #fff;
+        text-align: left;
+      }
+
+      .quick-card strong {
+        display: block;
+        margin-bottom: 10px;
+        color: var(--text);
+        font-size: 13px;
+      }
+
+      .pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+      }
+
+      .pair b {
+        display: block;
+        color: var(--primary);
+        font-size: 25px;
+        line-height: 1;
+      }
+
+      .pair span {
+        display: block;
+        margin-top: 5px;
+        color: var(--light);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      section {
+        padding: 68px max(22px, calc((100vw - 980px) / 2));
+      }
+
+      section:nth-child(even) {
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .section-title {
+        margin: 0 auto 24px;
+        text-align: center;
+      }
+
+      .section-title .eyebrow {
+        margin: 0 0 7px;
+        color: var(--light);
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin: 0;
+        color: var(--text);
+        font-size: clamp(27px, 4vw, 38px);
+        font-weight: 760;
+        line-height: 1.16;
+      }
+
+      .lead {
+        max-width: 850px;
+        margin: 14px auto 0;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.7;
+        text-align: center;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .card {
+        min-height: 176px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+      }
+
+      .card h3 {
+        margin: 0 0 8px;
+        color: var(--text);
+        font-size: 18px;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.58;
+      }
+
+      .figure {
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: #fff;
+        box-shadow: 0 12px 34px rgba(15, 23, 42, 0.09);
+      }
+
+      .figure img {
+        width: 100%;
+      }
+
+      .method-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.64fr) minmax(280px, 0.36fr);
+        gap: 28px;
+        align-items: start;
+        margin-top: 28px;
+      }
+
+      .steps {
+        display: grid;
+        gap: 12px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 38px minmax(0, 1fr);
+        gap: 13px;
+        padding: 15px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: #fff;
+      }
+
+      .step b {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 31px;
+        height: 31px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: #fff;
+        font-size: 14px;
+      }
+
+      .step h3 {
+        margin: 0 0 4px;
+        font-size: 16px;
+      }
+
+      .step p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.48;
+      }
+
+      .result-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .result-card {
+        padding: 20px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: #fff;
+      }
+
+      .result-card h3 {
+        margin: 0 0 14px;
+        font-size: 18px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 70px minmax(0, 1fr) 54px;
+        gap: 11px;
+        align-items: center;
+        margin-top: 11px;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 760;
+      }
+
+      .bar-track {
+        overflow: hidden;
+        height: 12px;
+        border-radius: 999px;
+        background: #e5e7eb;
+      }
+
+      .bar {
+        height: 100%;
+        border-radius: inherit;
+        background: var(--primary);
+      }
+
+      .bar.dapo {
+        background: var(--purple);
+      }
+
+      .result-card p {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.52;
+      }
+
+      .wide-figure {
+        margin-top: 24px;
+      }
+
+      .estimator-grid,
+      .code-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.58fr) minmax(280px, 0.42fr);
+        gap: 28px;
+        align-items: start;
+        margin-top: 28px;
+      }
+
+      .bullets {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--muted);
+      }
+
+      .bullets li {
+        margin: 8px 0;
+      }
+
+      pre {
+        overflow-x: auto;
+        margin: 0;
+        padding: 18px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--accent);
+        color: var(--text);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      code {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      }
+
+      .file-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border-top: 1px solid var(--border);
+      }
+
+      .file-list li {
+        padding: 13px 0;
+        border-bottom: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .file-list strong {
+        display: block;
+        color: var(--text);
+      }
+
+      footer {
+        padding: 32px 22px 44px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--muted);
+        font-size: 13px;
+        text-align: center;
+      }
+
+      @media (max-width: 900px) {
+        .topbar {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .quick-results {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .cards,
+        .method-grid,
+        .result-grid,
+        .estimator-grid,
+        .code-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .hero-inner {
+          padding-top: 44px;
+        }
+
+        .links,
+        .quick-results {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+
+        .button {
+          width: 100%;
+        }
+
+        .bar-row {
+          grid-template-columns: 58px minmax(0, 1fr) 48px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="POISE home">
+        <strong>POISE</strong>
+        <span><b>H</b>uman <b>O</b>riented <b>L</b>anguage <b>I</b>ntelligence Lab (HOLI)</span>
+        <span>Graduate School of Data Science, Seoul National University</span>
+      </a>
+      <nav class="nav" aria-label="Page navigation">
+        <a href="#plain">Overview</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#analysis">Analysis</a>
+        <a href="#cite">BibTeX</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-inner">
+          <p class="kicker">arXiv preprint &middot; cs.LG &middot; 2026</p>
+          <h1>Your Language Model is Its Own Critic</h1>
+          <p class="paper-subtitle">
+            Reinforcement Learning with Value Estimation from Actor&rsquo;s Internal States
+          </p>
+          <p class="authors">
+            Yunho Choi<sup>*</sup>, Jongwon Lim<sup>*</sup>, Woojin Ahn, Minjae Oh,
+            Jeonghoon Shim, <a href="https://yohanjo.github.io/lab.html">Yohan Jo</a><sup>&dagger;</sup>
+          </p>
+          <p class="notes"><sup>*</sup>Equal contribution. <sup>&dagger;</sup>Corresponding author.</p>
+          <div class="links" aria-label="Paper links">
+            <a class="button" href="https://arxiv.org/pdf/2605.07579" target="_blank" rel="noopener noreferrer">Paper</a>
+            <a class="button secondary" href="https://arxiv.org/abs/2605.07579" target="_blank" rel="noopener noreferrer">arXiv</a>
+            <a class="button secondary" href="#cite">BibTeX</a>
+          </div>
+
+          <div class="plain-summary" id="plain">
+            <h2>What is this paper about?</h2>
+            <p>
+              Reinforcement learning with verifiable rewards trains language models from outcome
+              feedback, such as whether a final math answer is correct. This feedback is powerful,
+              but high variance: two responses to the same prompt may receive very different rewards,
+              and noisy updates can make training unstable. Existing methods reduce this variance by
+              estimating a baseline, either with a separate critic model or with multiple rollouts from
+              the same prompt. POISE studies whether the actor model already contains enough
+              information to estimate this baseline itself. It trains a lightweight value estimator on
+              hidden states and entropy statistics produced during the actor's own forward pass, then
+              uses a cross-rollout construction to keep the policy-gradient update unbiased.
+            </p>
+          </div>
+
+          <figure class="teaser">
+            <img src="assets/poise-overview.png" alt="Overview of POISE cross-rollout value estimation">
+            <figcaption class="caption">
+              POISE samples two independent rollouts for the same prompt and swaps their value estimates.
+              This keeps the baseline useful for variance reduction without letting a rollout directly judge itself.
+            </figcaption>
+          </figure>
+
+          <div class="quick-results" aria-label="POISE and DAPO comparison highlights">
+            <div class="quick-card">
+              <strong>Qwen3-4B Avg@32</strong>
+              <div class="pair">
+                <div><b>0.500</b><span>POISE</span></div>
+                <div><b>0.508</b><span>DAPO</span></div>
+              </div>
+            </div>
+            <div class="quick-card">
+              <strong>DeepSeek 1.5B Avg@32</strong>
+              <div class="pair">
+                <div><b>0.303</b><span>POISE</span></div>
+                <div><b>0.296</b><span>DAPO</span></div>
+              </div>
+            </div>
+            <div class="quick-card">
+              <strong>Qwen3-4B Time</strong>
+              <div class="pair">
+                <div><b>36h</b><span>POISE</span></div>
+                <div><b>49h</b><span>DAPO</span></div>
+              </div>
+            </div>
+            <div class="quick-card">
+              <strong>DeepSeek 1.5B Time</strong>
+              <div class="pair">
+                <div><b>18h</b><span>POISE</span></div>
+                <div><b>24h</b><span>DAPO</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="abstract">
+        <div class="section-title">
+          <p class="eyebrow">Abstract</p>
+          <h2>Why internal value estimation matters</h2>
+          <p class="lead">
+            RL with verifiable rewards needs a baseline: an estimate of how much reward the model
+            should expect for a prompt. A good baseline makes learning less noisy. POISE replaces
+            expensive baselines with a lightweight estimator trained on signals already computed by
+            the actor during generation.
+          </p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <h3>No separate critic model</h3>
+            <p>Instead of training another language-model-sized network, POISE uses the actor's internal states.</p>
+          </article>
+          <article class="card">
+            <h3>Less rollout overhead</h3>
+            <p>POISE avoids spending many same-prompt samples just to estimate a group-relative baseline.</p>
+          </article>
+          <article class="card">
+            <h3>Stable online learning</h3>
+            <p>The estimator is updated as the policy changes, using current and recent rollouts.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="method">
+        <div class="section-title">
+          <p class="eyebrow">Method</p>
+          <h2>Cross-rollout value estimation</h2>
+          <p class="lead">
+            A generated answer should not directly create its own baseline, because that can bias
+            the policy gradient. POISE solves this with a simple paired-rollout trick.
+          </p>
+        </div>
+
+        <div class="method-grid">
+          <figure class="figure">
+            <img src="assets/poise-overview.png" alt="POISE cross-rollout algorithm diagram">
+            <figcaption class="caption">
+              The two responses are independent samples for the same prompt. Each one uses the other
+              response's internal-state features to estimate a baseline.
+            </figcaption>
+          </figure>
+
+          <div class="steps">
+            <div class="step">
+              <b>1</b>
+              <div>
+                <h3>Generate two answers</h3>
+                <p>The old policy samples two independent responses for each prompt.</p>
+              </div>
+            </div>
+            <div class="step">
+              <b>2</b>
+              <div>
+                <h3>Read internal signals</h3>
+                <p>POISE collects hidden-state pools and token entropy statistics from each response.</p>
+              </div>
+            </div>
+            <div class="step">
+              <b>3</b>
+              <div>
+                <h3>Swap predicted values</h3>
+                <p>Each response subtracts a value estimated from the other response, preserving independence.</p>
+              </div>
+            </div>
+            <div class="step">
+              <b>4</b>
+              <div>
+                <h3>Update the estimator</h3>
+                <p>A small probe is trained online so its predictions follow the changing actor.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="results">
+        <div class="section-title">
+          <p class="eyebrow">Results</p>
+          <h2>Comparable accuracy with less wall-clock time</h2>
+          <p class="lead">
+            POISE is not presented as a method that always beats DAPO in accuracy. The main result is
+            that it reaches similar benchmark performance while using a cheaper baseline mechanism.
+          </p>
+        </div>
+
+        <div class="result-grid">
+          <article class="result-card">
+            <h3>Qwen3-4B Avg@32</h3>
+            <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 98.4%"></div></div><span>0.500</span></div>
+            <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>0.508</span></div>
+            <p>DAPO is slightly higher on the overall average; POISE wins on AMC23, HMMT25, and BRUMO25.</p>
+          </article>
+
+          <article class="result-card">
+            <h3>DeepSeek-R1-Distill-Qwen-1.5B Avg@32</h3>
+            <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 100%"></div></div><span>0.303</span></div>
+            <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 97.7%"></div></div><span>0.296</span></div>
+            <p>POISE is slightly higher on the reported benchmark average.</p>
+          </article>
+
+          <article class="result-card">
+            <h3>Qwen3-4B training time</h3>
+            <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 73.5%"></div></div><span>36h</span></div>
+            <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>49h</span></div>
+            <p>Wall-clock time on two B200 GPUs in the reported setup.</p>
+          </article>
+
+          <article class="result-card">
+            <h3>DeepSeek 1.5B training time</h3>
+            <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 75%"></div></div><span>18h</span></div>
+            <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>24h</span></div>
+            <p>POISE reaches the same performance level faster on one B200 GPU.</p>
+          </article>
+        </div>
+
+        <figure class="figure wide-figure">
+          <img src="assets/results-dynamics.png" alt="POISE benchmark table and training dynamics">
+          <figcaption class="caption">
+            Reported benchmark accuracy, wall-clock dynamics, gradient norms, and estimator calibration.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section id="analysis">
+        <div class="section-title">
+          <p class="eyebrow">Analysis</p>
+          <h2>A small probe can act like a critic</h2>
+          <p class="lead">
+            The value estimator is trained from the actor's own internal representations. It is much
+            smaller than a policy-scale critic, yet still predicts useful reward baselines.
+          </p>
+        </div>
+
+        <div class="estimator-grid">
+          <figure class="figure">
+            <img src="assets/value-estimation.png" alt="Value-estimation comparison between POISE probe and critic">
+            <figcaption class="caption">
+              The internal-state estimator predicts empirical verifier reward without adding another
+              language-model-sized network.
+            </figcaption>
+          </figure>
+          <ul class="bullets">
+            <li>Features come from hidden states and entropy statistics already available during generation.</li>
+            <li>The estimator is trained online with a buffer of recent rollouts.</li>
+            <li>The reported variance reduction ratio stays around 30% after the initial phase.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="cite">
+        <div class="section-title">
+          <p class="eyebrow">BibTeX</p>
+          <h2>Citation</h2>
+          <p class="lead">Citation metadata is based on the arXiv preprint record.</p>
+        </div>
+        <pre><code>@misc{choi2026poise,
+  title = {Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States},
+  author = {Yunho Choi and Jongwon Lim and Woojin Ahn and Minjae Oh and Jeonghoon Shim and Yohan Jo},
+  year = {2026},
+  eprint = {2605.07579},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.LG},
+  note = {Preprint}
+}</code></pre>
+      </section>
+    </main>
+
+    <footer>
+      POISE, Human Oriented Language Intelligence Lab.
+    </footer>
+  </body>
+</html>
