@@ -77,13 +77,11 @@ Results are saved as `summary.json` and `summary.csv` in the output directory.
 ## Citation
 
 ```bibtex
-@misc{choi2026poise,
+@inproceedings{choi2026poise,
   title={Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States},
   author={Yunho Choi and Jongwon Lim and Woojin Ahn and Minjae Oh and Jeonghoon Shim and Yohan Jo},
+  booktitle={Advances in Neural Information Processing Systems},
   year={2026},
-  eprint={2605.07579},
-  archivePrefix={arXiv},
-  primaryClass={cs.LG},
   url={https://arxiv.org/abs/2605.07579}
 }
 ```
