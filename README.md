@@ -10,6 +10,8 @@ Estimating a baseline for policy gradient updates often requires a separate crit
 
 ## Method
 
+[![POISE method overview](assets/main_figure.png)](assets/main_figure.pdf)
+
 **POISE (Policy Optimization with Internal State Value Estimation)** learns a lightweight value probe from the actor's hidden states and token entropy. For two independent rollouts of a prompt, each response uses the other response's predicted value as its baseline:
 
 $$
