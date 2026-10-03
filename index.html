@@ -17,6 +17,7 @@
     <meta name="citation_author" content="Jeonghoon Shim" />
     <meta name="citation_author" content="Yohan Jo" />
     <meta name="citation_publication_date" content="2026" />
+    <meta name="citation_conference_title" content="Advances in Neural Information Processing Systems" />
     <meta name="citation_arxiv_id" content="2605.07579" />
     <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2605.07579" />
     <meta property="og:title" content="Your Language Model is Its Own Critic | POISE" />
@@ -49,7 +50,7 @@
         "@type": "Organization",
         "name": "Human Oriented Language Intelligence Lab, Seoul National University"
       },
-      "isPartOf": { "@type": "Periodical", "name": "arXiv" },
+      "isPartOf": { "@type": "PublicationVolume", "name": "Advances in Neural Information Processing Systems" },
       "identifier": "arXiv:2605.07579",
       "url": "https://holi-lab.github.io/POISE/",
       "sameAs": "https://arxiv.org/abs/2605.07579",
@@ -410,6 +411,7 @@
 
       .figure img {
         width: 100%;
+        height: auto;
       }
 
       .method-grid {
@@ -507,6 +509,22 @@
       }
 
       .bar.rloo { background: var(--muted); }
+      .table-scroll { overflow-x: auto; margin-top: 18px; }
+      .data-table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+      .data-table caption { text-align: left; font-size: 17px; font-weight: 750; margin-bottom: 12px; color: var(--text); }
+      .data-table th, .data-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: right; }
+      .data-table th:first-child, .data-table td:first-child, .data-table tbody th { text-align: left; }
+      .data-table thead { background: var(--accent); }
+      .data-table tbody th { font-weight: 500; }
+      .data-table tbody tr:last-child { border-bottom: 2px solid var(--border); }
+      .data-table[data-source="S4.T1"] { min-width: 620px; }
+      .result-details { margin-top: 24px; padding: 20px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; }
+      .result-details summary { cursor: pointer; color: var(--primary); font-weight: 750; }
+      .result-details summary:focus-visible, .table-scroll:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+      .equation { padding: 14px; background: var(--surface); text-align: center; font-family: Georgia, serif; font-size: 20px; }
+      .motivation-grid { align-items: center; }
+      .motivation-grid .figure { margin: 0; }
+      .motivation-grid p + p { margin-top: 14px; }
       section, #plain { scroll-margin-top: 100px; }
       .metric-heading { flex-wrap: wrap; }
 
@@ -926,6 +944,29 @@
             <p>The estimator is updated as the policy changes, using current and recent rollouts.</p>
           </article>
         </div>
+
+        <div class="visual-grid motivation-grid">
+          <article class="analysis-card">
+            <h3>Why prompt diversity reduces variance</h3>
+            <p>Let B = n × m be the total rollout budget: n prompts with m responses each.
+              For a fixed policy and prompt-specific baseline, the batch gradient covariance is</p>
+            <div class="equation" aria-label="Covariance of the batch gradient equals within-prompt covariance divided by B plus m times between-prompt covariance divided by B">
+              Cov(ĝ) = Σ<sub>w</sub> / B + (m / B) Σ<sub>b</sub>
+            </div>
+            <p>Σ<sub>w</sub> and Σ<sub>b</sub> are the within-prompt and between-prompt
+              covariance components. The within-prompt term stays fixed while the between-prompt
+              term scales with m. This isolates the effect of rollout allocation with the baseline held fixed.
+              <a href="https://arxiv.org/html/2605.07579v3#S2.SS2">Section 2.2</a>.</p>
+          </article>
+          <figure class="figure">
+            <img src="assets/prompt-diversity-v3.svg" alt="Estimated gradient variance for one versus eight rollouts per prompt in math-only and multi-domain training" loading="lazy" width="529" height="367">
+            <figcaption class="caption">Controlled allocation experiment on OLMo-3-7B-Think-DPO
+              with Dolci-Think-RL-7B subsets. Both allocations use the same total rollout budget
+              and fixed baselines from eight separate precomputed rollouts. Eight responses per
+              prompt yield higher estimated variance, with a larger gap on the multi-domain subset.
+              <a href="https://arxiv.org/html/2605.07579v3#S2.F2.fig1">Figure 1</a>.</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section id="probe">
@@ -941,7 +982,7 @@
 
         <div class="estimator-grid">
           <figure class="figure">
-            <img src="assets/value-estimation-v3.svg" alt="Preliminary value-estimation comparison between POISE probe and critic">
+            <img src="assets/value-estimation-v3.svg" alt="Preliminary value-estimation comparison between POISE probe and critic" width="751" height="417">
             <figcaption class="caption">
               Preliminary value-prediction experiment. Predictions are compared against empirical
               Avg@8 pass rates on held-out prompts.
@@ -981,7 +1022,7 @@
 
         <div class="method-grid">
           <figure class="figure">
-            <img src="assets/poise-overview.png" alt="POISE cross-rollout algorithm diagram">
+            <img src="assets/poise-overview.png" alt="POISE cross-rollout algorithm diagram" width="1540" height="583">
             <figcaption class="caption">
               The two responses are independent samples for the same prompt. Each one uses the other
               response's internal-state features to estimate a baseline.
@@ -1013,8 +1054,8 @@
             <div class="step">
               <b>4</b>
               <div>
-                <h3>Update the estimator</h3>
-                <p>Compute baselines before fitting on the current batch. Then fit the ridge probe using paired-rollout rewards and a buffer of recent trajectories.</p>
+                <h3>Update the policy and probe</h3>
+                <p>Compute baselines before fitting on the current batch. Use the fixed advantages in a PPO-style clipped policy update; fit the ridge probe on paired-rollout rewards and recent trajectories.</p>
               </div>
             </div>
           </div>
@@ -1052,17 +1093,61 @@
 </div></article>
         </div>
         <p class="notes">All bars use the same 0–100 scale. Source: <a href="https://arxiv.org/html/2605.07579v3#S4.T1">Table 1</a>.</p>
+        <details class="result-details">
+          <summary>Full results: all 17 benchmarks</summary>
+          <p class="notes">Scores reproduced from Table 1. The overall score averages all 17
+            benchmarks; each benchmark retains its own scoring rule. AIME uses Avg@32.
+            Bold marks the highest score within each backbone, including ties. Scroll horizontally
+            on small screens. See <a href="https://arxiv.org/html/2605.07579v3#A4.SS5">the evaluation protocol</a>.</p>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Qwen3-4B benchmark results"><table class="data-table" data-source="S4.T1" data-model="Qwen3-4B"><caption>Qwen3-4B</caption><thead><tr><th scope="col">Domain</th><th scope="col">Benchmark</th><th scope="col">Base</th><th scope="col">RLOO<br>m = 2</th><th scope="col">DAPO<br>m = 8</th><th scope="col">POISE<br>m = 2</th></tr></thead><tbody>
+<tr><td>Code</td><th scope="row">HumanEval</th><td>87.20</td><td>93.90</td><td><strong>95.73</strong></td><td>94.51</td></tr>
+<tr><td>Code</td><th scope="row">LiveCodeBench</th><td>22.58</td><td>30.82</td><td>24.73</td><td><strong>35.13</strong></td></tr>
+<tr><td>Code</td><th scope="row">MBPP</th><td>80.20</td><td>83.40</td><td>85.00</td><td><strong>85.60</strong></td></tr>
+<tr><td>Logic</td><th scope="row">ARC-AGI-1</th><td>2.25</td><td><strong>3.50</strong></td><td><strong>3.50</strong></td><td><strong>3.50</strong></td></tr>
+<tr><td>Logic</td><th scope="row">Zebra Puzzle</th><td>12.02</td><td>42.39</td><td><strong>43.77</strong></td><td>41.05</td></tr>
+<tr><td>Math</td><th scope="row">AIME(avg@32)</th><td>18.30</td><td>38.44</td><td><strong>44.90</strong></td><td>43.44</td></tr>
+<tr><td>Math</td><th scope="row">MATH500</th><td>82.40</td><td>90.80</td><td><strong>92.80</strong></td><td>92.00</td></tr>
+<tr><td>Simulation</td><th scope="row">CodeIO</th><td>11.00</td><td>13.50</td><td>15.50</td><td><strong>17.50</strong></td></tr>
+<tr><td>Simulation</td><th scope="row">CRUXEval-I</th><td>87.00</td><td>86.12</td><td>88.00</td><td><strong>88.75</strong></td></tr>
+<tr><td>Simulation</td><th scope="row">CRUXEval-O</th><td>87.13</td><td>87.12</td><td>80.88</td><td><strong>87.62</strong></td></tr>
+<tr><td>Science</td><th scope="row">GPQA Diamond</th><td>42.93</td><td>54.04</td><td>54.55</td><td><strong>56.06</strong></td></tr>
+<tr><td>Science</td><th scope="row">SuperGPQA</th><td>36.50</td><td>41.10</td><td>43.40</td><td><strong>44.30</strong></td></tr>
+<tr><td>Tabular Reasoning</td><th scope="row">FinQA</th><td><strong>46.05</strong></td><td>44.78</td><td>44.50</td><td>45.78</td></tr>
+<tr><td>Tabular Reasoning</td><th scope="row">HiTab</th><td>65.00</td><td>72.10</td><td>71.50</td><td><strong>73.40</strong></td></tr>
+<tr><td>Tabular Reasoning</td><th scope="row">MultiHiertt</th><td>49.40</td><td>50.60</td><td>51.49</td><td><strong>52.08</strong></td></tr>
+<tr><td>LiveBench</td><th scope="row">LiveBench</th><td>39.59</td><td><strong>45.78</strong></td><td>45.20</td><td>45.35</td></tr>
+<tr><td>Instruction Following</td><th scope="row">IFEval</th><td><strong>83.18</strong></td><td>80.78</td><td>79.30</td><td>81.70</td></tr>
+<tr><td>All benchmarks</td><th scope="row">Average</th><td>50.16</td><td>56.42</td><td>56.75</td><td><strong>58.10</strong></td></tr></tbody></table></div><div class="table-scroll" tabindex="0" role="region" aria-label="OLMo-3-7B-Instruct-DPO benchmark results"><table class="data-table" data-source="S4.T1" data-model="OLMo-3-7B-Instruct-DPO"><caption>OLMo-3-7B-Instruct-DPO</caption><thead><tr><th scope="col">Domain</th><th scope="col">Benchmark</th><th scope="col">Base</th><th scope="col">RLOO<br>m = 2</th><th scope="col">DAPO<br>m = 8</th><th scope="col">POISE<br>m = 2</th></tr></thead><tbody>
+<tr><td>Code</td><th scope="row">HumanEval</th><td>15.24</td><td>87.80</td><td>89.63</td><td><strong>91.46</strong></td></tr>
+<tr><td>Code</td><th scope="row">LiveCodeBench</th><td>6.81</td><td><strong>32.62</strong></td><td>25.81</td><td>30.82</td></tr>
+<tr><td>Code</td><th scope="row">MBPP</th><td>53.00</td><td>67.20</td><td>68.80</td><td><strong>69.60</strong></td></tr>
+<tr><td>Logic</td><th scope="row">ARC-AGI-1</th><td>1.00</td><td><strong>2.25</strong></td><td>1.75</td><td><strong>2.25</strong></td></tr>
+<tr><td>Logic</td><th scope="row">Zebra Puzzle</th><td>18.06</td><td>24.37</td><td>28.53</td><td><strong>31.90</strong></td></tr>
+<tr><td>Math</td><th scope="row">AIME(avg@32)</th><td>18.33</td><td>33.54</td><td>33.85</td><td><strong>35.83</strong></td></tr>
+<tr><td>Math</td><th scope="row">MATH500</th><td>78.20</td><td>88.80</td><td>91.40</td><td><strong>92.20</strong></td></tr>
+<tr><td>Simulation</td><th scope="row">CodeIO</th><td>10.50</td><td>19.00</td><td>16.00</td><td><strong>20.00</strong></td></tr>
+<tr><td>Simulation</td><th scope="row">CRUXEval-I</th><td><strong>80.12</strong></td><td>75.75</td><td>70.38</td><td>75.00</td></tr>
+<tr><td>Simulation</td><th scope="row">CRUXEval-O</th><td>49.12</td><td>79.75</td><td>79.62</td><td><strong>80.88</strong></td></tr>
+<tr><td>Science</td><th scope="row">GPQA Diamond</th><td>40.40</td><td>44.44</td><td>42.42</td><td><strong>47.98</strong></td></tr>
+<tr><td>Science</td><th scope="row">SuperGPQA</th><td>26.30</td><td>30.80</td><td>30.30</td><td><strong>31.40</strong></td></tr>
+<tr><td>Tabular Reasoning</td><th scope="row">FinQA</th><td>28.61</td><td>34.97</td><td>34.79</td><td><strong>38.96</strong></td></tr>
+<tr><td>Tabular Reasoning</td><th scope="row">HiTab</th><td>36.10</td><td>56.50</td><td>57.60</td><td><strong>58.00</strong></td></tr>
+<tr><td>Tabular Reasoning</td><th scope="row">MultiHiertt</th><td>20.83</td><td><strong>32.44</strong></td><td>28.87</td><td>31.55</td></tr>
+<tr><td>LiveBench</td><th scope="row">LiveBench</th><td>30.18</td><td>34.95</td><td><strong>36.59</strong></td><td>33.54</td></tr>
+<tr><td>Instruction Following</td><th scope="row">IFEval</th><td>78.56</td><td>76.34</td><td><strong>78.93</strong></td><td>77.26</td></tr>
+<tr><td>All benchmarks</td><th scope="row">Average</th><td>34.79</td><td>48.32</td><td>47.96</td><td><strong>49.92</strong></td></tr></tbody></table></div>
+        </details>
         <div class="note-box"><strong>Value estimation at the same rollout allocation.</strong>
           RLOO subtracts the paired response's reward; POISE predicts the baseline from its internal
           states. POISE improves on RLOO by 1.68 points on Qwen3 and 1.60 points on OLMo.
           Individual benchmarks vary; POISE leads on 11 of 17 benchmarks for each backbone.</div>
         <div class="visual-grid">
-          <figure class="figure"><img src="assets/gradient-variance-v3.svg" alt="Qwen3-4B Adam-moment variance proxy for POISE, RLOO, and rescaled DAPO" loading="lazy">
+          <figure class="figure"><img src="assets/gradient-variance-v3.svg" alt="Qwen3-4B Adam-moment variance proxy for POISE, RLOO, and rescaled DAPO" loading="lazy" width="509" height="361">
             <figcaption class="caption">Training stability on Qwen3-4B. The Adam-moment proxy is
               summed across parameters; it is not exact gradient variance. DAPO is rescaled to
               account for its advantage normalization. POISE shows a lower proxy over most of training.
               <a href="https://arxiv.org/html/2605.07579v3#S4.F4">Figure 4</a>.</figcaption></figure>
-          <figure class="figure"><img src="assets/estimator-tracking-v3.svg" alt="Value-estimator MAE and Pearson correlation over Qwen3-4B training" loading="lazy">
+          <figure class="figure"><img src="assets/estimator-tracking-v3.svg" alt="Value-estimator MAE and Pearson correlation over Qwen3-4B training" loading="lazy" width="486" height="361">
             <figcaption class="caption">The value estimator tracks the changing policy. Every 40
               steps, predictions are evaluated against empirical values from eight rollouts per
               validation prompt. MAE and Pearson correlation remain stable.
@@ -1101,13 +1186,36 @@
             <h3>Mostly linear signal</h3>
             <p>
               The linear ridge probe matches or exceeds the tested MLPs in Pearson correlation,
-              although some MLPs have lower MAE. Combining prompt states, reasoning states,
-              and entropy gives the best prediction in the input-feature ablation.
+              although some MLPs have lower MAE. Layer and pooling-window ablations show that
+              value prediction is not confined to a single extraction setting.
+              <a href="https://arxiv.org/html/2605.07579v3#A8.SS3">Extraction ablations</a>;
+              <a href="https://arxiv.org/html/2605.07579v3#A8.SS4">probe architectures</a>.
             </p>
           </article>
         </div>
 
-        <div class="visual-grid" aria-label="Representative value-estimator analysis charts">
+        <div class="analysis-card" style="margin-top: 28px;">
+          <h3>Which signals support value estimation?</h3>
+          <p>On Qwen3-4B, reasoning states and entropy are more predictive than prompt states alone.
+            Combining the three gives the lowest MAE and highest correlation in this ablation.
+            Response length is a weaker predictor. These are held-out value-prediction scores,
+            separate from downstream RL accuracy.</p>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Estimator input-feature ablation">
+            <table class="data-table" data-source="S5.tab1">
+              <caption>Input features · Table 2</caption>
+              <thead><tr><th scope="col">Probe input</th><th scope="col">MAE ↓</th><th scope="col">Pearson r ↑</th></tr></thead>
+              <tbody><tr><th scope="row">Prompt hidden states only</th><td>0.234</td><td>0.569</td></tr>
+<tr><th scope="row">Reasoning hidden states only</th><td>0.132</td><td>0.821</td></tr>
+<tr><th scope="row">Mean entropy only</th><td>0.152</td><td>0.780</td></tr>
+<tr><th scope="row">Response length only</th><td>0.251</td><td>0.494</td></tr>
+<tr><th scope="row">Full estimator</th><td>0.126</td><td>0.838</td></tr></tbody>
+            </table>
+          </div>
+          <p class="notes">Evaluated against empirical Avg@8 values.
+            <a href="https://arxiv.org/html/2605.07579v3#S5.tab1">Table 2</a>.</p>
+        </div>
+
+        <div class="visual-grid" aria-label="Qwen3-4B value-estimator results on all five datasets">
           <article class="chart-card">
             <h3>Pearson correlation</h3>
             <p>Higher is better. Qwen3-4B value prediction across RLVR domains.</p>
@@ -1123,6 +1231,13 @@
               <div class="compare-bars">
                 <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 60.9%"></div></div><span>0.609</span></div>
                 <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 38.4%"></div></div><span>0.384</span></div>
+              </div>
+            </div>
+            <div class="chart-row">
+              <div class="chart-label"><span>Coding (AceCoder)</span></div>
+              <div class="compare-bars">
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 61.2%"></div></div><span>0.612</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 5.6%"></div></div><span>0.056</span></div>
               </div>
             </div>
             <div class="chart-row">
@@ -1144,33 +1259,40 @@
 
           <article class="chart-card">
             <h3>Mean absolute error</h3>
-            <p>Lower is better. Shorter bars mean smaller prediction error.</p>
+            <p>Lower is better. All bars use a 0–0.5 scale.</p>
             <div class="chart-row">
               <div class="chart-label"><span>Math (DAPO-Math)</span></div>
               <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 35.3%"></div></div><span>0.141</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 65.5%"></div></div><span>0.262</span></div>
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 28.2%"></div></div><span>0.141</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 52.4%"></div></div><span>0.262</span></div>
               </div>
             </div>
             <div class="chart-row">
               <div class="chart-label"><span>Math (DeepScaleR)</span></div>
               <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 57.8%"></div></div><span>0.231</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 98.3%"></div></div><span>0.393</span></div>
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 46.2%"></div></div><span>0.231</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 78.6%"></div></div><span>0.393</span></div>
+              </div>
+            </div>
+            <div class="chart-row">
+              <div class="chart-label"><span>Coding (AceCoder)</span></div>
+              <div class="compare-bars">
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 46.8%"></div></div><span>0.234</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 99.8%"></div></div><span>0.499</span></div>
               </div>
             </div>
             <div class="chart-row">
               <div class="chart-label"><span>Tool use (ToolDial)</span></div>
               <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 47%"></div></div><span>0.188</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 75.8%"></div></div><span>0.303</span></div>
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 37.6%"></div></div><span>0.188</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 60.6%"></div></div><span>0.303</span></div>
               </div>
             </div>
             <div class="chart-row">
               <div class="chart-label"><span>Instruction following (IF-RLVR)</span></div>
               <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 48.8%"></div></div><span>0.195</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 87.5%"></div></div><span>0.350</span></div>
+                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 39%"></div></div><span>0.195</span></div>
+                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 70%"></div></div><span>0.350</span></div>
               </div>
             </div>
             <div class="legend"><span><i class="poise-dot"></i>Internal-state probe</span><span><i class="critic-dot"></i>Critic</span></div>
@@ -1198,23 +1320,25 @@
           <a href="https://arxiv.org/html/2605.07579v3#A7.T10">Table 10</a>.
           Figures are reproduced from <a href="https://arxiv.org/abs/2605.07579v3">Choi et al., arXiv v3</a>
           under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+        <p class="notes"><strong>Scope.</strong> The experiments use fixed compute budgets;
+          behavior over substantially longer training horizons remains untested. The estimator
+          predicts sequence-level value. Token-level credit assignment, non-verifiable rewards,
+          and long-horizon agentic tasks are future directions.
+          <a href="https://arxiv.org/html/2605.07579v3#S7">Limitations</a>.</p>
       </section>
 
       <section id="cite">
         <div class="section-title">
           <p class="eyebrow">BibTeX</p>
           <h2>Citation</h2>
-          <p class="lead">Accepted to NeurIPS 2026. The citation below points to the arXiv record.</p>
+          <p class="lead">NeurIPS 2026 citation. The arXiv link provides access to the paper.</p>
         </div>
-        <pre><code>@misc{choi2026poise,
+        <pre><code>@inproceedings{choi2026poise,
   title = {Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States},
   author = {Yunho Choi and Jongwon Lim and Woojin Ahn and Minjae Oh and Jeonghoon Shim and Yohan Jo},
+  booktitle = {Advances in Neural Information Processing Systems},
   year = {2026},
-  eprint = {2605.07579},
-  archivePrefix = {arXiv},
-  primaryClass = {cs.LG},
-  url = {https://arxiv.org/abs/2605.07579},
-  note = {Accepted to NeurIPS 2026}
+  url = {https://arxiv.org/abs/2605.07579}
 }</code></pre>
       </section>
     </main>
