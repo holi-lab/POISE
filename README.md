@@ -10,8 +10,6 @@ Estimating a baseline for policy gradient updates often requires a separate crit
 
 ## Method
 
-[![POISE method overview](assets/main_figure.png)](assets/main_figure.pdf)
-
 **POISE (Policy Optimization with Internal State Value Estimation)** learns a lightweight value probe from the actor's hidden states and token entropy. For two independent rollouts of a prompt, each response uses the other response's predicted value as its baseline:
 
 $$
@@ -65,7 +63,7 @@ See [configuration](docs/configuration.md) for overrides, logging, and resume. M
 
 We evaluate on **19 benchmarks** covering the paper's six domains: **mathematics, code generation, STEM, logic, simulation, and tabular reasoning**.
 
-Keep SandboxFusion running for code scoring. AIME 2025 uses avg@32 and is prepared automatically.
+Keep SandboxFusion running for code scoring.
 
 ```bash
 python scripts/data/download_guru.py --splits offline_eval
