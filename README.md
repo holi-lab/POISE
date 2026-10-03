@@ -4,6 +4,10 @@ Official implementation of **[Your Language Model is Its Own Critic: Reinforceme
 
 **Accepted at NeurIPS 2026** · [Project page](https://holi-lab.github.io/POISE/)
 
+## Motivation
+
+Estimating a baseline for policy gradient updates often requires a separate critic or many rollouts per prompt, adding memory and sampling costs. **POISE predicts the baseline from the actor's own internal states** with a lightweight probe, without training a separate critic or averaging rewards over a large rollout group.
+
 ## Method
 
 **POISE (Policy Optimization with Internal State Value Estimation)** learns a lightweight value probe from the actor's hidden states and token entropy. For two independent rollouts of a prompt, each response uses the other response's predicted value as its baseline:
