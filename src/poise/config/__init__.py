@@ -1,0 +1,1 @@
+"""Packaged POISE training configuration."""

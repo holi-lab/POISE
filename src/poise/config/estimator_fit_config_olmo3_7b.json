@@ -1,0 +1,10 @@
+{
+  "prompt_hidden_pca_dim": 16,
+  "response_hidden_pca_dim": 128,
+  "alpha": 1000.0,
+  "model_type": "ridge",
+  "target_mode": "other_rollout_correctness",
+  "random_seed": 42,
+  "clip_min": 0.0,
+  "clip_max": 1.0
+}

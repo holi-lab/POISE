@@ -1,0 +1,9 @@
+include LICENSE NOTICE README.md
+recursive-include src/poise *.py *.yaml *.json
+recursive-include vendor/verl *.py *.yaml *.json *.txt *.typed
+include vendor/verl/version/version
+recursive-include scripts *.py *.sh
+recursive-include requirements *.txt
+recursive-include docs *.md
+recursive-include tests *.py *.json
+global-exclude __pycache__ *.py[cod]

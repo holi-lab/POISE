@@ -1,0 +1,25 @@
+{
+  "prompt_hidden": {
+    "input_field": "prompt_hidden_states",
+    "layer_index": 7,
+    "pooling": {
+      "type": "last_n_mean",
+      "n": 32
+    }
+  },
+  "response_hidden": {
+    "input_field": "response_hidden_states",
+    "layer_index": 7,
+    "pooling": {
+      "type": "last_n_mean",
+      "n": 32
+    }
+  },
+  "rollout_scalars": {
+    "scalar_keys": [
+      "output_mean_token_entropy",
+      "reasoning_mean_token_entropy",
+      "answer_mean_token_entropy"
+    ]
+  }
+}

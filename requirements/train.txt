@@ -1,0 +1,15 @@
+# Install in a fresh Python 3.12 environment; this repository bundles its own verl.
+torch==2.8.0
+torchvision==0.23.0
+torchaudio==2.8.0
+transformers==4.57.1
+tokenizers==0.22.1
+vllm==0.11.0
+ray[default,cgraph]==2.56.1
+numpy==1.26.4
+scikit-learn==1.9.0
+joblib==1.5.3
+tensordict==0.9.1
+torchdata==0.11.0
+wandb==0.19.11
+# Install flash-attn==2.8.3 separately after torch, with --no-build-isolation.

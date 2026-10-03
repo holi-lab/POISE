@@ -1,0 +1,10 @@
+POISE includes software derived from:
+
+Reasoning360: https://github.com/LLM360/Reasoning360
+veRL: https://github.com/volcengine/verl
+
+The bundled runtime is based on Reasoning360 commit
+620cdea969d4ae3ec3642f17f2911e5d9ea155cb, with local modifications.
+Upstream copyright and license notices are retained in the source files.
+See LICENSE for Apache License 2.0; individual files retain any additional
+upstream license terms.

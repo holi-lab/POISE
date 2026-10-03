@@ -1,0 +1,59 @@
+hydra:
+  searchpath:
+    - pkg://verl.trainer.config
+
+defaults:
+  - ppo_trainer
+  - _self_
+
+data:
+  gen_batch_size: ${data.train_batch_size}
+
+reward_model:
+  reward_manager: dapo
+  overlong_buffer:
+    enable: false
+    len: 0
+    penalty_factor: 0.0
+    log: false
+
+algorithm:
+  adv_estimator: grpo
+  norm_adv_by_std_in_grpo: false
+
+actor_rollout_ref:
+  rollout:
+    n: 2
+
+trainer:
+  poise:
+    validation_rollouts_per_prompt: ${oc.decode:${oc.env:POISE_VALIDATION_ROLLOUTS,1}}
+    bootstrap:
+      from_scratch: ${oc.decode:${oc.env:POISE_BOOTSTRAP_FROM_SCRATCH,True}}
+      steps: ${oc.decode:${oc.env:POISE_BOOTSTRAP_STEPS,16}}
+      # Keep the actor batch in the order left by the token-balancing pass
+      # that runs right after generation, instead of regrouping it by uid
+      # and balancing a second time before the update. That reproduces
+      # verl's RLOO batch order, and therefore its rank assignment and
+      # gradient, for the bootstrap phase only. Off everywhere by default.
+      rloo_batch_order: ${oc.decode:${oc.env:POISE_BOOTSTRAP_RLOO_BATCH_ORDER,False}}
+    # null/auto writes <trainer.default_local_dir>/prompt_reward_logs/<step>.json
+    prompt_reward_log_dir: null
+    estimator:
+      model_paths:
+        math: ${oc.env:POISE_MATH_ESTIMATOR_PATH,artifacts/math_initial_estimator.joblib}
+        code: ${oc.env:POISE_CODE_ESTIMATOR_PATH,artifacts/code_initial_estimator.joblib}
+        other: ${oc.env:POISE_OTHER_ESTIMATOR_PATH,artifacts/other_initial_estimator.joblib}
+      feature_builder_config_path: ${oc.env:POISE_FEATURE_BUILDER_CONFIG,${poise_config:feature_builder_config_qwen3_4b.json}}
+      fit_config_path: ${oc.env:POISE_ESTIMATOR_FIT_CONFIG,${poise_config:estimator_fit_config_qwen3_4b.json}}
+      group_size: ${actor_rollout_ref.rollout.n}
+      warmup_steps: ${oc.env:POISE_ESTIMATOR_WARMUP_STEPS,8}
+      # Independent of trainer.test_freq and trainer.save_freq. null/auto writes
+      # <trainer.default_local_dir>/adaptive_estimator_updates/global_step_<N>/.
+      save_freq: ${oc.env:POISE_ESTIMATOR_SAVE_FREQ,10}
+      online_output_dir: ${oc.env:POISE_ESTIMATOR_ONLINE_OUTPUT_DIR,null}
+      eval_on_val: ${oc.decode:${oc.env:POISE_ESTIMATOR_EVAL_ON_VAL,False}}
+      buffer_max_rows:
+        math: ${oc.env:POISE_MATH_BUFFER_MAX_ROWS,4096}
+        code: ${oc.env:POISE_CODE_BUFFER_MAX_ROWS,3072}
+        other: ${oc.env:POISE_OTHER_BUFFER_MAX_ROWS,3072}
