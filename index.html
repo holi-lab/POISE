@@ -63,1036 +63,275 @@
     }
     </script>
     <style>
+
       :root {
-        --primary: #2563eb;
-        --primary-hover: #1d4ed8;
-        --text: #1e293b;
-        --muted: #64748b;
-        --light: #94a3b8;
-        --bg: #ffffff;
-        --surface: #f8fafc;
-        --accent: #f1f5f9;
-        --border: #e2e8f0;
-        --success: #0f766e;
-        --purple: #6d5bd0;
-        --ours: #16a34a;
-        --opponent: #dc2626;
-        --radius: 14px;
-        --shadow: 0 18px 48px rgba(15, 23, 42, 0.12);
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        margin: 0;
-        background: var(--bg);
-        color: var(--text);
-        font-family: Inter, "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-        font-size: 16px;
-        line-height: 1.65;
-        -webkit-font-smoothing: antialiased;
-      }
-
-      a {
-        color: var(--primary);
-        text-decoration: none;
-      }
-
-      a:hover {
-        color: var(--primary-hover);
-        text-decoration: underline;
-      }
-
-      img {
-        display: block;
-        max-width: 100%;
-      }
-
-      .topbar {
-        position: sticky;
-        top: 0;
-        z-index: 40;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 24px;
-        min-height: 70px;
-        padding: 10px max(22px, calc((100vw - 1120px) / 2));
-        border-bottom: 1px solid var(--border);
-        background: rgba(255, 255, 255, 0.94);
-        backdrop-filter: blur(14px);
-      }
-
-      .brand {
-        color: var(--text);
-      }
-
-      .brand strong {
-        display: block;
-        font-size: 14px;
-        letter-spacing: 0.04em;
-      }
-
-      .brand span {
-        display: block;
-        margin-top: 2px;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 1.25;
-      }
-
-      .brand b {
-        color: var(--primary);
-        font-weight: 900;
-        text-decoration: underline;
-        text-underline-offset: 2px;
-      }
-
-      .nav {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        font-size: 13px;
-        font-weight: 700;
-      }
-
-      .nav a {
-        color: var(--muted);
-      }
-
-      .hero {
-        background: var(--surface);
-        border-bottom: 1px solid var(--border);
-      }
-
-      .hero-inner {
-        max-width: 1120px;
-        margin: 0 auto;
-        padding: 70px 22px 42px;
-        text-align: center;
-      }
-
-      .kicker {
-        margin: 0 0 14px;
-        color: var(--muted);
-        font-size: 13px;
-        font-weight: 800;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      h1 {
-        max-width: 960px;
-        margin: 0 auto;
-        color: var(--text);
-        font-size: clamp(42px, 7vw, 74px);
-        font-weight: 820;
-        line-height: 1.04;
-        letter-spacing: -0.02em;
-      }
-
-      .paper-subtitle {
-        max-width: 860px;
-        margin: 18px auto 0;
-        color: #334155;
-        font-size: clamp(20px, 2.5vw, 29px);
-        font-weight: 650;
-        line-height: 1.28;
-      }
-
-      .authors {
-        max-width: 860px;
-        margin: 24px auto 0;
-        color: #334155;
-        font-size: 17px;
-        line-height: 1.55;
-      }
-
-      .authors a {
-        font-weight: 700;
-      }
-
-      .notes {
-        margin: 7px 0 0;
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .links {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 26px;
-      }
-
-      .button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 43px;
-        padding: 0 18px;
-        border-radius: 12px;
-        background: var(--text);
-        color: #fff;
-        font-size: 14px;
-        font-weight: 750;
-        box-shadow: 0 7px 18px rgba(15, 23, 42, 0.14);
-      }
-
-      .button:hover {
-        background: var(--primary);
-        color: #fff;
-        text-decoration: none;
-        transform: translateY(-1px);
-      }
-
-      .button.secondary {
-        border: 1px solid var(--border);
-        background: #fff;
-        color: var(--primary);
-        box-shadow: none;
-      }
-
-      .button.secondary:hover {
-        background: var(--accent);
-        color: var(--primary-hover);
-      }
-
-      .plain-summary {
-        max-width: 940px;
-        margin: 34px auto 0;
-        padding: clamp(20px, 3vw, 30px);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: #fff;
-        text-align: left;
-        box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
-      }
-
-      .plain-summary h2 {
-        margin: 0 0 10px;
-        font-size: 22px;
-      }
-
-      .plain-summary p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 17px;
-      }
-
-      .caption {
-        margin: 0;
-        padding: 13px 18px 16px;
-        border-top: 1px solid var(--border);
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.45;
-        text-align: left;
-      }
-
-      .tldr {
-        max-width: 940px;
-        margin: 30px auto 0;
-        padding: 20px 24px;
-        border: 1px solid #bfdbfe;
-        border-left: 5px solid var(--primary);
-        border-radius: var(--radius);
-        background: #eff6ff;
-        text-align: left;
-      }
-
-      .tldr strong {
-        display: block;
-        margin-bottom: 7px;
-        color: var(--primary-hover);
-        font-size: 13px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .tldr p {
-        margin: 0;
-        color: #1e3a8a;
-        font-size: 17px;
-        line-height: 1.62;
-      }
-
-      section {
-        padding: 68px max(22px, calc((100vw - 980px) / 2));
-      }
-
-      section:nth-child(even) {
-        background: var(--surface);
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-      }
-
-      #probe,
-      #method {
-        padding-right: max(22px, calc((100vw - 1280px) / 2));
-        padding-left: max(22px, calc((100vw - 1280px) / 2));
-      }
-
-      .section-title {
-        margin: 0 auto 24px;
-        text-align: center;
-      }
-
-      .section-title .eyebrow {
-        margin: 0 0 7px;
-        color: var(--light);
-        font-size: 12px;
-        font-weight: 850;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      h2 {
-        margin: 0;
-        color: var(--text);
-        font-size: clamp(27px, 4vw, 38px);
-        font-weight: 760;
-        line-height: 1.16;
-      }
-
-      .lead {
-        max-width: 850px;
-        margin: 14px auto 0;
-        color: var(--muted);
-        font-size: 18px;
-        line-height: 1.7;
-        text-align: center;
-      }
-
-      .cards {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
-        margin-top: 28px;
-      }
-
-      .card {
-        min-height: 176px;
-        padding: 20px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: #fff;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-      }
-
-      .card h3 {
-        margin: 0 0 8px;
-        color: var(--text);
-        font-size: 18px;
-      }
-
-      .card p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.58;
-      }
-
-      .figure {
-        overflow: hidden;
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        background: #fff;
-        box-shadow: 0 12px 34px rgba(15, 23, 42, 0.09);
-      }
-
-      .figure img {
-        width: 100%;
-        height: auto;
-      }
-
-      .method-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 0.74fr) minmax(260px, 0.26fr);
-        gap: 28px;
-        align-items: start;
-        margin-top: 28px;
-      }
-
-      .steps {
-        display: grid;
-        gap: 12px;
-      }
-
-      .step {
-        display: grid;
-        grid-template-columns: 38px minmax(0, 1fr);
-        gap: 13px;
-        padding: 15px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: #fff;
-      }
-
-      .step b {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 31px;
-        height: 31px;
-        border-radius: 50%;
-        background: var(--primary);
-        color: #fff;
-        font-size: 14px;
-      }
-
-      .step h3 {
-        margin: 0 0 4px;
-        font-size: 16px;
-      }
-
-      .step p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 14px;
-        line-height: 1.48;
-      }
-
-      .result-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-        margin-top: 28px;
-      }
-
-      .result-card {
-        padding: 20px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: #fff;
-      }
-
-      .result-card h3 {
-        margin: 0 0 14px;
-        font-size: 18px;
-      }
-
-      .bar-row {
-        display: grid;
-        grid-template-columns: 70px minmax(0, 1fr) 54px;
-        gap: 11px;
-        align-items: center;
-        margin-top: 11px;
-        color: #334155;
-        font-size: 13px;
-        font-weight: 760;
-      }
-
-      .bar-track {
-        overflow: hidden;
-        height: 12px;
-        border-radius: 999px;
-        background: #e5e7eb;
-      }
-
-      .bar {
-        height: 100%;
-        border-radius: inherit;
-        background: var(--ours);
-      }
-
-      .bar.dapo {
-        background: var(--opponent);
-      }
-
-      .bar.rloo { background: var(--muted); }
-      .table-scroll { overflow-x: auto; margin-top: 18px; }
-      .data-table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
-      .data-table caption { text-align: left; font-size: 17px; font-weight: 750; margin-bottom: 12px; color: var(--text); }
-      .data-table th, .data-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: right; }
-      .data-table th:first-child, .data-table td:first-child, .data-table tbody th { text-align: left; }
-      .data-table thead { background: var(--accent); }
-      .data-table tbody th { font-weight: 500; }
-      .data-table tbody tr:last-child { border-bottom: 2px solid var(--border); }
-      .data-table[data-source="S4.T1"] { min-width: 620px; }
-      .result-details { margin-top: 24px; padding: 20px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; }
-      .result-details summary { cursor: pointer; color: var(--primary); font-weight: 750; }
-      .result-details summary:focus-visible, .table-scroll:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
-      .equation { padding: 14px; background: var(--surface); text-align: center; font-family: Georgia, serif; font-size: 20px; }
-      .motivation-grid { align-items: center; }
-      .motivation-grid .figure { margin: 0; }
-      .motivation-grid p + p { margin-top: 14px; }
-      section, #plain { scroll-margin-top: 100px; }
-      .metric-heading { flex-wrap: wrap; }
-
-      .result-card p {
-        margin: 14px 0 0;
-        color: var(--muted);
-        font-size: 14px;
-        line-height: 1.52;
-      }
-
-      .metric-block {
-        margin-top: 16px;
-        padding-top: 16px;
-        border-top: 1px solid var(--border);
-      }
-
-      .metric-heading {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        color: var(--text);
-        font-size: 14px;
-        font-weight: 850;
-      }
-
-      .metric-heading span:last-child {
-        color: var(--muted);
-        font-size: 11px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .note-box {
-        max-width: 940px;
-        margin: 24px auto 0;
-        padding: 18px 20px;
-        border: 1px solid var(--border);
-        border-left: 4px solid var(--purple);
-        border-radius: var(--radius);
-        background: #fff;
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.6;
-      }
-
-      .note-box strong {
-        color: var(--text);
-      }
-
-      .benchmark-suite {
-        display: grid;
-        grid-template-columns: minmax(0, 0.54fr) minmax(280px, 0.46fr);
-        gap: 18px;
-        align-items: center;
-        margin-top: 28px;
-        padding: 20px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: #fff;
-      }
-
-      .benchmark-suite strong {
-        display: block;
-        margin-bottom: 6px;
-        color: var(--text);
-        font-size: 18px;
-      }
-
-      .benchmark-suite p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.58;
-      }
-
-      .suite-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .suite-tags span {
-        display: inline-flex;
-        align-items: center;
-        min-height: 32px;
-        padding: 0 12px;
-        border: 1px solid var(--border);
-        border-radius: 999px;
-        background: var(--surface);
-        color: var(--text);
-        font-size: 12px;
-        font-weight: 850;
-      }
-
-      .analysis-stack {
-        display: grid;
-        gap: 16px;
-        margin-top: 28px;
-      }
-
-      .analysis-card {
-        padding: 20px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: #fff;
-      }
-
-      .analysis-card h3 {
-        margin: 0 0 8px;
-        color: var(--text);
-        font-size: 18px;
-      }
-
-      .analysis-card p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.58;
-      }
-
-      .visual-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-        margin-top: 28px;
-      }
-
-      .chart-card {
-        padding: 20px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: #fff;
-      }
-
-      .chart-card h3 {
-        margin: 0;
-        color: var(--text);
-        font-size: 18px;
-      }
-
-      .chart-card > p {
-        margin: 6px 0 0;
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .chart-row {
-        margin-top: 16px;
-      }
-
-      .chart-label {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        color: var(--text);
-        font-size: 13px;
-        font-weight: 800;
-      }
-
-      .compare-bars {
-        display: grid;
-        gap: 6px;
-        margin-top: 7px;
-      }
-
-      .compare-bar {
-        display: grid;
-        grid-template-columns: 54px minmax(0, 1fr) 46px;
-        gap: 8px;
-        align-items: center;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 750;
-      }
-
-      .compare-track {
-        overflow: hidden;
-        height: 10px;
-        border-radius: 999px;
-        background: #e5e7eb;
-      }
-
-      .compare-fill {
-        height: 100%;
-        border-radius: inherit;
-      }
-
-      .compare-fill.poise {
-        background: var(--ours);
-      }
-
-      .compare-fill.critic {
-        background: var(--opponent);
-      }
-
-      .legend {
-        display: flex;
-        gap: 14px;
-        margin-top: 14px;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 750;
-      }
-
-      .legend span {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .legend i {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-      }
-
-      .legend .poise-dot {
-        background: var(--ours);
-      }
-
-      .legend .critic-dot {
-        background: var(--opponent);
-      }
-
-      .wide-figure {
-        margin-top: 24px;
-      }
-
-      .estimator-grid,
-      .code-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 0.74fr) minmax(260px, 0.26fr);
-        gap: 28px;
-        align-items: start;
-        margin-top: 28px;
-      }
-
-      .bullets {
-        margin: 0;
-        padding-left: 20px;
-        color: var(--muted);
-      }
-
-      .bullets li {
-        margin: 8px 0;
-      }
-
-      pre {
-        overflow-x: auto;
-        margin: 0;
-        padding: 18px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: var(--accent);
-        color: var(--text);
-        font-size: 13px;
-        line-height: 1.55;
-      }
-
-      code {
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-      }
-
-      .file-list {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        border-top: 1px solid var(--border);
-      }
-
-      .file-list li {
-        padding: 13px 0;
-        border-bottom: 1px solid var(--border);
-        color: var(--muted);
-        font-size: 14px;
-      }
-
-      .file-list strong {
-        display: block;
-        color: var(--text);
-      }
-
-      footer {
-        padding: 32px 22px 44px;
-        border-top: 1px solid var(--border);
-        background: var(--surface);
-        color: var(--muted);
-        font-size: 13px;
-        text-align: center;
-      }
-
-      @media (max-width: 900px) {
-        .topbar {
-          align-items: flex-start;
-          flex-direction: column;
-        }
-
-        .cards,
-        .method-grid,
-        .result-grid,
-        .benchmark-suite,
-        .visual-grid,
-        .estimator-grid,
-        .code-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      @media (max-width: 560px) {
-        .hero-inner {
-          padding-top: 44px;
-        }
-
-        .links {
-          display: grid;
-          grid-template-columns: 1fr;
-        }
-
-        .button {
-          width: 100%;
-        }
-
-        .bar-row {
-          grid-template-columns: 58px minmax(0, 1fr) 48px;
-        }
+        --ink: #17283b; --muted: #526174; --blue: #1d5e96;
+        --poise: #2474b5; --dapo: #7a5195; --rloo: #c0392b;
+        --line: #dce3eb; --surface: #f6f8fb; --probe: #2d8656; --critic: #c0392b;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: #fff; font: 17px/1.65 "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+      a { color: var(--blue); text-underline-offset: 3px; }
+      a:hover { text-decoration-thickness: 2px; }
+      a:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--poise); outline-offset: 4px; }
+      img { display: block; width: 100%; max-width: 100%; height: auto; }
+      figure { margin: 0; }
+      p { margin: 0 0 16px; }
+      h1, h2, h3, h4 { line-height: 1.25; margin: 0 0 14px; }
+      h2 { font-size: 32px; letter-spacing: -.7px; }
+      h3 { font-size: 23px; letter-spacing: -.3px; }
+      h4 { font-size: 18px; }
+      strong { font-weight: 650; }
+      [id] { scroll-margin-top: 88px; }
+      .skip-link { position: absolute; top: -80px; left: 16px; z-index: 100; padding: 8px 16px; background: white; }
+      .skip-link:focus { top: 8px; }
+      .topbar { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.97); border-bottom: 1px solid var(--line); }
+      .topbar-inner { max-width: 1100px; margin: auto; padding: 0 28px; min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+      .brand { color: var(--ink); text-decoration: none; font-size: 21px; font-weight: 750; letter-spacing: -.6px; }
+      .nav { display: flex; gap: 28px; font-size: 14px; }
+      .nav a { color: var(--muted); text-decoration: none; padding: 16px 0; }
+      .nav a:hover { color: var(--blue); text-decoration: underline; }
+      main { max-width: 1100px; padding: 0 28px; margin: auto; }
+      main > section { padding: 58px 0; border-bottom: 1px solid var(--line); }
+      .hero { text-align: center; padding: 44px 0 42px; }
+      .kicker, .eyebrow { color: var(--blue); font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; }
+      h1 { max-width: 940px; margin: 0 auto 14px; font-size: clamp(32px, 4.4vw, 53px); letter-spacing: -1.8px; line-height: 1.1; text-wrap: balance; }
+      .paper-subtitle { font-size: 19px; color: var(--muted); margin: 0 auto 18px; max-width: 750px; text-wrap: balance; }
+      .hero-takeaway { font-size: 21px; line-height: 1.5; max-width: 790px; margin: 0 auto 20px; text-wrap: pretty; }
+      .authors { font-size: 15px; margin-bottom: 4px; }
+      sup { font-size: .7em; }
+      .notes, figcaption { font-size: 13px; line-height: 1.6; color: var(--muted); }
+      .notes { margin: 10px 0 0; }
+      .links { display: flex; justify-content: center; gap: 10px; margin: 21px 0 26px; }
+      .button { background: var(--blue); color: #fff; text-decoration: none; border: 1px solid var(--blue); border-radius: 7px; min-width: 110px; padding: 9px 20px; font-size: 14px; font-weight: 600; }
+      .button.secondary { color: var(--ink); background: white; border-color: #bcc9d7; }
+      .button:hover { background: #edf4fa; color: var(--blue); }
+      .headline-results { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; max-width: 750px; margin: auto; }
+      .headline-result { background: #f0f6fc; border-top: 3px solid var(--poise); padding: 16px 20px; text-align: left; }
+      .headline-result h2 { font-size: 15px; letter-spacing: 0; margin-bottom: 8px; }
+      .headline-result p { margin: 0; color: var(--muted); font-size: 14px; }
+      .headline-result strong { color: var(--blue); font-size: 29px; line-height: 1.1; letter-spacing: -.7px; margin-right: 4px; }
+      .hero .result-context { max-width: 750px; margin: 12px auto 0; font-size: 13px; color: var(--muted); }
+      .section-title { max-width: 830px; margin-bottom: 26px; }
+      .lead { color: var(--muted); font-size: 18px; }
+      .prose { max-width: 830px; }
+      .method-steps { list-style: none; counter-reset: step; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 28px; }
+      .method-steps li { counter-increment: step; padding-top: 14px; border-top: 1px solid var(--line); }
+      .method-steps h3 { font-size: 18px; }
+      .method-steps h3::before { content: counter(step) ". "; color: var(--blue); }
+      .method-steps p { color: var(--muted); font-size: 15px; margin: 0; }
+      .figure { padding: 16px 16px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+      .figure-link { display: block; cursor: zoom-in; }
+      figcaption { margin-top: 12px; }
+      figcaption a:last-child { white-space: nowrap; }
+      .compact-figure { max-width: 760px; margin: 24px auto; }
+      details { border: 1px solid var(--line); border-radius: 8px; padding: 0 22px; margin-top: 22px; background: #fff; }
+      summary { cursor: pointer; padding: 17px 0; font-size: 16px; font-weight: 600; line-height: 1.4; }
+      summary:hover { color: var(--blue); }
+      details[open] { padding-bottom: 22px; }
+      details[open] > summary { margin-bottom: 12px; border-bottom: 1px solid var(--line); }
+      details p:last-child { margin-bottom: 0; }
+      .equation { background: var(--surface); padding: 18px; text-align: center; font-family: Georgia,serif; font-size: 22px; margin: 18px 0; }
+      .result-grid, .visual-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; margin: 24px 0 0; align-items: start; }
+      .result-card, .chart-card { border: 1px solid var(--line); border-radius: 8px; padding: 24px; min-width: 0; }
+      .result-card h3 { font-size: 20px; }
+      .delta { font-size: 14px; color: var(--muted); }
+      .delta strong { font-size: 19px; color: var(--blue); }
+      .metric-block { display: grid; gap: 14px; margin-top: 22px; }
+      .bar-row { display: grid; grid-template-columns: 54px minmax(0,1fr) 49px; gap: 12px; align-items: center; font-size: 14px; }
+      .bar-row > span:last-child, td { font-variant-numeric: tabular-nums; text-align: right; }
+      .bar-track { height: 15px; background: #f0f2f5; border-radius: 2px; overflow: hidden; }
+      .bar { height: 100%; background: var(--poise); }
+      .bar.dapo { background: var(--dapo); }
+      .bar.rloo { background: var(--rloo); }
+      .bar.base { background: #81909e; }
+      .axis { margin: 7px 61px 0 66px; display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+      .note-box { padding: 18px 22px; background: var(--surface); margin-top: 24px; font-size: 15px; }
+      .note-box p:last-child { margin-bottom: 0; }
+      .table-scroll { max-width: 100%; overflow-x: auto; margin-top: 18px; }
+      .data-table { border-collapse: collapse; width: 100%; font-size: 14px; }
+      .data-table caption { text-align: left; font-weight: 650; padding-bottom: 10px; color: var(--ink); }
+      .data-table th, .data-table td { border-bottom: 1px solid var(--line); padding: 9px 12px; }
+      .data-table th { text-align: left; font-weight: 600; }
+      .data-table thead { background: var(--surface); }
+      .data-table tbody tr:last-child { background: #f0f6fc; }
+      .data-table td { white-space: nowrap; }
+      .result-details .data-table { min-width: 660px; }
+      .result-details .table-scroll + .table-scroll { margin-top: 32px; }
+      .analysis-part { padding: 34px 0; border-top: 1px solid var(--line); }
+      .analysis-part:last-child { padding-bottom: 0; }
+      .question-number { color: var(--blue); margin-right: 8px; font-size: 15px; letter-spacing: 1px; }
+      .analysis-part > p { max-width: 830px; }
+      .analysis-part > .table-scroll { max-width: 830px; }
+      .chart-card h3 { font-size: 20px; }
+      .chart-card p { color: var(--muted); font-size: 14px; }
+      .chart-row { margin-top: 22px; }
+      .chart-label { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+      .compare-bars { display: grid; gap: 6px; }
+      .compare-bar { display: grid; grid-template-columns: 38px minmax(0,1fr) 43px; align-items: center; gap: 8px; font-size: 12px; font-variant-numeric: tabular-nums; }
+      .compare-bar > span:last-child { text-align: right; }
+      .compare-track { height: 12px; background: #f0f2f5; }
+      .compare-fill { height: 100%; }
+      .compare-fill.poise, .poise-dot { background: var(--probe); }
+      .compare-fill.critic, .critic-dot { background: var(--critic); }
+      .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; margin-top: 20px; color: var(--muted); }
+      .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
+      .scope { color: var(--muted); font-size: 14px; margin-top: 24px; }
+      pre { margin: 0; padding: 24px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.75 Consolas,monospace; }
+      footer { max-width: 1100px; padding: 28px; margin: auto; font-size: 13px; line-height: 1.7; color: var(--muted); }
+      footer p { margin-bottom: 8px; }
+      @media (max-width: 760px) {
+        main { padding: 0 20px; }
+        main > section { padding: 40px 0; }
+        .hero { padding-top: 28px; }
+        .result-grid, .visual-grid { grid-template-columns: 1fr; gap: 16px; }
+        .method-steps { gap: 18px; }
+        .topbar-inner { padding: 0 20px; }
+        .nav { gap: 20px; }
+        h2 { font-size: 28px; }
+        .headline-result { padding: 14px; }
+      }
+      @media (max-width: 480px) {
+        body { font-size: 16px; line-height: 1.65; }
+        main { padding: 0 18px; }
+        [id] { scroll-margin-top: 68px; }
+        .topbar-inner { padding: 0 16px; min-height: 54px; gap: 16px; }
+        .brand { font-size: 19px; }
+        .nav { gap: 14px; font-size: 12px; }
+        .nav a { padding: 16px 0; }
+        .hero { padding-top: 26px; }
+        h1 { font-size: 32px; letter-spacing: -1px; line-height: 1.13; }
+        h2 { font-size: 26px; }
+        h3 { font-size: 21px; }
+        .kicker, .eyebrow { font-size: 11px; margin-bottom: 12px; }
+        .paper-subtitle { font-size: 16px; line-height: 1.4; margin-bottom: 16px; }
+        .hero-takeaway { font-size: 18px; line-height: 1.45; margin-bottom: 16px; }
+        .authors { font-size: 13px; line-height: 1.6; }
+        .hero .notes { font-size: 11px; margin-top: 6px; }
+        .links { display: grid; grid-template-columns: 1fr 1fr; margin: 18px 0 20px; gap: 8px; }
+        .button { min-width: 0; padding: 8px 12px; }
+        .headline-results { gap: 10px; }
+        .headline-result { padding: 12px; }
+        .headline-result h2 { font-size: 12px; min-height: 30px; margin-bottom: 5px; }
+        .headline-result strong { font-size: 25px; }
+        .headline-result p { font-size: 12px; }
+        .hero .result-context { font-size: 12px; text-align: left; }
+        .lead { font-size: 16px; }
+        .method-steps { grid-template-columns: 1fr; gap: 20px; margin-top: 24px; }
+        .method-steps li { padding-top: 12px; }
+        .figure { padding: 7px 7px 10px; border-radius: 5px; }
+        figcaption { font-size: 12px; margin-top: 9px; }
+        .figure figcaption { padding: 0 4px; }
+        details { padding: 0 14px; }
+        details[open] { padding-bottom: 16px; }
+        summary { font-size: 15px; }
+        .equation { padding: 14px 8px; font-size: 18px; }
+        .result-card, .chart-card { padding: 18px; }
+        .result-card h3 { font-size: 18px; }
+        .bar-row { gap: 8px; grid-template-columns: 48px minmax(0,1fr) 43px; font-size: 13px; }
+        .axis { margin-left: 56px; margin-right: 51px; }
+        .note-box { padding: 16px; }
+        .data-table { font-size: 12px; }
+        .data-table th, .data-table td { padding: 9px 7px; }
+        .data-table:not([data-source="S4.T1"]) th { overflow-wrap: anywhere; }
+        .analysis-part { padding: 28px 0; }
+        pre { padding: 16px; font-size: 12px; }
+        footer { padding: 24px 18px; font-size: 12px; }
       }
     </style>
   </head>
+
   <body>
-    <header class="topbar">
-      <a class="brand" href="#top" aria-label="POISE home">
-        <strong>POISE</strong>
-        <span><b>H</b>uman <b>O</b>riented <b>L</b>anguage <b>I</b>ntelligence Lab (HOLI)</span>
-        <span>Graduate School of Data Science, Seoul National University</span>
-      </a>
+    <a class="skip-link" href="#top">Skip to content</a>
+    <header class="topbar"><div class="topbar-inner">
+      <a class="brand" href="#top" aria-label="POISE home">POISE</a>
       <nav class="nav" aria-label="Page navigation">
-        <a href="#plain">Overview</a>
-        <a href="#probe">Preliminary</a>
-        <a href="#method">Method</a>
-        <a href="#results">Results</a>
-        <a href="#analysis">Analysis</a>
-        <a href="#cite">BibTeX</a>
+        <a href="#method">Method</a><a href="#results">Results</a><a href="#analysis">Analysis</a><a href="#cite">BibTeX</a>
       </nav>
-    </header>
-
+    </div></header>
     <main id="top">
-      <section class="hero">
-        <div class="hero-inner">
-          <p class="kicker">Accepted to NeurIPS 2026</p>
-          <h1>Your Language Model is Its Own Critic</h1>
-          <p class="paper-subtitle">
-            Reinforcement Learning with Value Estimation from Actor&rsquo;s Internal States
-          </p>
-          <p class="authors">
-            Yunho Choi<sup>*</sup>, Jongwon Lim<sup>*</sup>, Woojin Ahn, Minjae Oh,
-            Jeonghoon Shim, <a href="https://yohanjo.github.io/lab.html">Yohan Jo</a><sup>&dagger;</sup>
-          </p>
-          <p class="notes"><sup>*</sup>Equal contribution. <sup>&dagger;</sup>Corresponding author.</p>
-          <p class="notes">Updated for <a href="https://arxiv.org/abs/2605.07579v3">arXiv v3</a> &middot; October 1, 2026 revision</p>
-          <div class="links" aria-label="Paper links">
-            <a class="button" href="https://arxiv.org/pdf/2605.07579" target="_blank" rel="noopener noreferrer">Paper</a>
-            <a class="button secondary" href="https://arxiv.org/abs/2605.07579" target="_blank" rel="noopener noreferrer">arXiv</a>
-            <a class="button secondary" href="https://github.com/holi-lab/POISE" target="_blank" rel="noopener noreferrer">Code</a>
-            <a class="button secondary" href="#cite">BibTeX</a>
-          </div>
-
-          <div class="tldr">
-            <strong>TL;DR</strong>
-            <p>
-              POISE uses a lightweight probe over the actor's internal states to estimate a value
-              baseline. Two independent rollouts supply each other's baselines, preserving the
-              unbiased policy-gradient estimator. Across six-domain RL training, POISE improves
-              the overall benchmark average on Qwen3-4B and OLMo-3-7B-Instruct-DPO.
-            </p>
-          </div>
-
-          <div class="plain-summary" id="plain">
-            <h2>What is this paper about?</h2>
-            <p>
-              Reinforcement learning with verifiable rewards trains language models from outcome
-              feedback, such as whether a final math answer is correct. To turn those raw rewards
-              into useful policy-gradient updates, RL methods usually subtract a baseline, so the
-              update reflects whether a response did better or worse than expected for the prompt.
-              GRPO estimates this baseline from multiple responses to the same prompt. Under a
-              fixed rollout budget, larger groups leave fewer distinct prompts in each batch.
-              PPO instead trains a separate policy-scale critic. POISE learns a baseline from
-              the actor's hidden states and token entropy, using two rollouts per prompt and
-              updating a small probe alongside the policy.
-            </p>
-          </div>
+      <section class="hero" aria-labelledby="paper-title">
+        <p class="kicker">NeurIPS 2026</p>
+        <h1 id="paper-title">Your Language Model is Its Own Critic</h1>
+        <p class="paper-subtitle">Reinforcement Learning with Value Estimation from Actor’s Internal States</p>
+        <p class="hero-takeaway"><strong>POISE learns a value baseline from the actor’s own internal states</strong>—using a lightweight probe and two rollouts per prompt.</p>
+        <p class="authors">Yunho Choi<sup>*</sup>, Jongwon Lim<sup>*</sup>, Woojin Ahn, Minjae Oh,<br> Jeonghoon Shim, <a href="https://yohanjo.github.io/lab.html">Yohan Jo</a><sup>†</sup></p>
+        <p class="notes">Seoul National University · <sup>*</sup>Equal contribution · <sup>†</sup>Corresponding author</p>
+        <div class="links" aria-label="Paper links">
+          <a class="button" href="https://arxiv.org/pdf/2605.07579" target="_blank" rel="noopener noreferrer">Read paper ↗</a>
+          <a class="button secondary" href="https://github.com/holi-lab/POISE" target="_blank" rel="noopener noreferrer">Code ↗</a>
+          <a class="button secondary" href="https://arxiv.org/abs/2605.07579" target="_blank" rel="noopener noreferrer">arXiv ↗</a>
+          <a class="button secondary" href="#cite">BibTeX</a>
         </div>
-      </section>
-
-      <section id="introduction">
-        <div class="section-title">
-          <p class="eyebrow">Introduction</p>
-          <h2>Why internal value estimation matters</h2>
-          <p class="lead">
-            Stable multi-domain RL needs both a reliable baseline and diverse prompts in each
-            batch. With the total rollout budget fixed, more responses per prompt reduce prompt
-            diversity. POISE combines a learned baseline with just two rollouts per prompt.
-          </p>
+        <div class="headline-results" aria-label="Main results compared with DAPO">
+          <article class="headline-result"><h2>Qwen3-4B</h2><p><strong>+1.35</strong> points</p><p>58.10 vs. 56.75</p></article>
+          <article class="headline-result"><h2>OLMo-3-7B-Instruct-DPO</h2><p><strong>+1.96</strong> points</p><p>49.92 vs. 47.96</p></article>
         </div>
-
-        <div class="cards">
-          <article class="card">
-            <h3>No separate critic model</h3>
-            <p>Instead of training another language-model-sized network, POISE uses the actor's internal states.</p>
-          </article>
-          <article class="card">
-            <h3>More prompts per batch</h3>
-            <p>With the same rollout budget, POISE uses two responses per prompt, versus eight for the DAPO baseline.</p>
-          </article>
-          <article class="card">
-            <h3>Stable online learning</h3>
-            <p>The estimator is updated as the policy changes, using current and recent rollouts.</p>
-          </article>
-        </div>
-
-        <div class="visual-grid motivation-grid">
-          <article class="analysis-card">
-            <h3>Why prompt diversity reduces variance</h3>
-            <p>Let B = n × m be the total rollout budget: n prompts with m responses each.
-              For a fixed policy and prompt-specific baseline, the batch gradient covariance is</p>
-            <div class="equation" aria-label="Covariance of the batch gradient equals within-prompt covariance divided by B plus m times between-prompt covariance divided by B">
-              Cov(ĝ) = Σ<sub>w</sub> / B + (m / B) Σ<sub>b</sub>
-            </div>
-            <p>Σ<sub>w</sub> and Σ<sub>b</sub> are the within-prompt and between-prompt
-              covariance components. The within-prompt term stays fixed while the between-prompt
-              term scales with m. This isolates the effect of rollout allocation with the baseline held fixed.
-              <a href="https://arxiv.org/html/2605.07579v3#S2.SS2">Section 2.2</a>.</p>
-          </article>
-          <figure class="figure">
-            <img src="assets/prompt-diversity-v3.svg" alt="Estimated gradient variance for one versus eight rollouts per prompt in math-only and multi-domain training" loading="lazy" width="529" height="367">
-            <figcaption class="caption">Controlled allocation experiment on OLMo-3-7B-Think-DPO
-              with Dolci-Think-RL-7B subsets. Both allocations use the same total rollout budget
-              and fixed baselines from eight separate precomputed rollouts. Eight responses per
-              prompt yield higher estimated variance, with a larger gap on the multi-domain subset.
-              <a href="https://arxiv.org/html/2605.07579v3#S2.F2.fig1">Figure 1</a>.</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section id="probe">
-        <div class="section-title">
-          <p class="eyebrow">Preliminary</p>
-          <h2>Internal states carry a usable value signal</h2>
-          <p class="lead">
-            Before using internal states inside RL training, POISE first tests whether they can support
-            prompt-level value estimation. The comparison spans five datasets and four policy
-            backbones, including GPT-OSS-120B. The figure below shows Qwen3-4B on DAPO-Math.
-          </p>
-        </div>
-
-        <div class="estimator-grid">
-          <figure class="figure">
-            <img src="assets/value-estimation-v3.svg" alt="Preliminary value-estimation comparison between POISE probe and critic" width="751" height="417">
-            <figcaption class="caption">
-              Preliminary value-prediction experiment. Predictions are compared against empirical
-              Avg@8 pass rates on held-out prompts.
-            </figcaption>
-          </figure>
-          <div class="analysis-stack">
-            <article class="analysis-card">
-              <h3>Internal states are predictive</h3>
-              <p>
-                The internal-state probe reaches Pearson r = 0.870 and MAE = 0.141 on the
-                preliminary benchmark, indicating that verifier-reward information is accessible
-                from the actor's own forward-pass signals.
-              </p>
-            </article>
-            <article class="analysis-card">
-              <h3>Competitive with a large critic</h3>
-              <p>
-                The comparison critic is finetuned from Qwen3-4B, but reports r = 0.676 and
-                MAE = 0.262 in the same setting. This critic reads the prompt alone; the probe also
-                observes generated trajectory features. Both use the same reward-labeled training data.
-              </p>
-            </article>
-          </div>
-        </div>
+        <p class="result-context">Gains over DAPO in the 17-benchmark average after six-domain RL training at equal compute. Rollouts per prompt: POISE 2, DAPO 8. <a href="#results">See results and setup ↓</a></p>
+        <p class="notes">Based on <a href="https://arxiv.org/abs/2605.07579v3">arXiv v3 · October 1, 2026</a></p>
       </section>
 
       <section id="method">
-        <div class="section-title">
+        <div class="section-title" id="plain">
           <p class="eyebrow">Method</p>
-          <h2>Cross-rollout value estimation</h2>
-          <p class="lead">
-            A baseline derived from the same response can bias the policy gradient. POISE predicts
-            each response's baseline from the other independently sampled response. The probe is
-            trained against rewards from other rollouts, so its target is expected prompt-level reward.
-          </p>
+          <h2>A learned baseline, with more prompts per batch</h2>
+          <p class="lead" id="introduction">At a fixed rollout budget, sampling more responses to each prompt leaves fewer distinct prompts in the batch. POISE estimates a baseline with a small probe over the actor’s internal states, avoiding a separate policy-scale critic.</p>
         </div>
-
-        <div class="method-grid">
-          <figure class="figure">
-            <img src="assets/poise-overview.png" alt="POISE cross-rollout algorithm diagram" width="1540" height="583">
-            <figcaption class="caption">
-              The two responses are independent samples for the same prompt. Each one uses the other
-              response's internal-state features to estimate a baseline.
-            </figcaption>
-          </figure>
-
-          <div class="steps">
-            <div class="step">
-              <b>1</b>
-              <div>
-                <h3>Generate two answers</h3>
-                <p>The old policy samples two independent responses for each prompt.</p>
-              </div>
-            </div>
-            <div class="step">
-              <b>2</b>
-              <div>
-                <h3>Read internal signals</h3>
-                <p>Mean-pool the final prompt and reasoning token states; average token entropy separately over all generated, reasoning, and answer tokens.</p>
-              </div>
-            </div>
-            <div class="step">
-              <b>3</b>
-              <div>
-                <h3>Swap predicted values</h3>
-                <p>Each response subtracts a value estimated from the other response, preserving independence.</p>
-              </div>
-            </div>
-            <div class="step">
-              <b>4</b>
-              <div>
-                <h3>Update the policy and probe</h3>
-                <p>Compute baselines before fitting on the current batch. Use the fixed advantages in a PPO-style clipped policy update; fit the ridge probe on paired-rollout rewards and recent trajectories.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <figure class="figure ">
+      <a class="figure-link" href="assets/poise-overview.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: POISE cross-rollout algorithm diagram">
+        <img src="assets/poise-overview.png" alt="POISE cross-rollout algorithm diagram" width="1540" height="583" loading="lazy">
+      </a>
+      <figcaption>Two independent responses to the same prompt supply each other’s value baseline. <a href="assets/poise-overview.png" target="_blank" rel="noopener noreferrer">Open full size ↗</a></figcaption>
+    </figure>
+        <ol class="method-steps">
+          <li><h3>Sample two responses</h3><p>Generate two independent responses to each prompt and collect their hidden states and token entropy.</p></li>
+          <li><h3>Use the other response</h3><p>Predict each response’s value baseline from the other response’s features, keeping the baseline independent of the response being updated.</p></li>
+          <li><h3>Learn alongside the policy</h3><p>Use the resulting advantages to update the policy, and fit the ridge probe to rewards from paired rollouts.</p></li>
+        </ol>
+        <details><summary>Feature extraction and update order</summary>
+          <p>Mean-pool the final prompt and reasoning token states at a fixed layer. Average token entropy separately over all generated tokens, reasoning tokens, and answer tokens.</p>
+          <p>Compute baselines before fitting on the current batch. Use the fixed advantages in a PPO-style clipped policy update; fit the ridge probe on paired-rollout rewards from current and recent trajectories.</p>
+          <p>Cross-rollout independence preserves the unbiased REINFORCE baseline term. The policy is optimized with the clipped surrogate objective.</p>
+        </details>
+        <details><summary>Why prompt diversity matters: theory and controlled experiment</summary>
+          <p>Let B = n × m be the total rollout budget: n prompts with m responses each. For a fixed policy, prompt distribution, and prompt-specific baseline, the batch gradient covariance is</p>
+          <div class="equation" aria-label="Covariance of the batch gradient equals within-prompt covariance divided by B plus m times between-prompt covariance divided by B">Cov(ĝ) = Σ<sub>w</sub> / B + (m / B) Σ<sub>b</sub></div>
+          <p>Σ<sub>w</sub> and Σ<sub>b</sub> are the within-prompt and between-prompt covariance components. The within-prompt term stays fixed, while the between-prompt term scales with m. This isolates rollout allocation with the baseline held fixed. <a href="https://arxiv.org/html/2605.07579v3#S2.SS2">Section 2.2</a>.</p>
+          <figure class="figure compact-figure">
+      <a class="figure-link" href="assets/prompt-diversity-v3.svg" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: Estimated gradient variance for one versus eight rollouts per prompt">
+        <img src="assets/prompt-diversity-v3.svg" alt="Estimated gradient variance for one versus eight rollouts per prompt" width="529" height="367" loading="lazy">
+      </a>
+      <figcaption>OLMo-3-7B-Think-DPO on math-only and multi-domain Dolci-Think-RL-7B subsets. Both allocations use the same total rollout budget and fixed baselines from eight separate precomputed rollouts. Eight responses per prompt yield higher estimated variance, with a larger gap on the multi-domain subset. <a href="https://arxiv.org/html/2605.07579v3#S2.F2.fig1">Figure 1</a>. <a href="assets/prompt-diversity-v3.svg" target="_blank" rel="noopener noreferrer">Open full size ↗</a></figcaption>
+    </figure>
+        </details>
       </section>
 
       <section id="results">
         <div class="section-title">
-          <p class="eyebrow">Results</p>
-          <h2>Higher overall scores across reasoning domains</h2>
-          <p class="lead">On the six-domain GURU training corpus, POISE achieves the highest overall
-            benchmark average among the main baselines on both backbones: 1.35 points above DAPO
-            on Qwen3-4B and 1.96 points on OLMo-3-7B-Instruct-DPO.</p>
-        </div>
-        <div class="benchmark-suite">
-          <div><strong>Six training domains, 17 evaluation benchmarks</strong>
-            <p>Training uses 92K verifiable prompts with an equal compute budget across methods.
-              Evaluation covers the six training domains, plus LiveBench and instruction following.
-              Checkpoints are selected on the validation split. POISE and RLOO use two rollouts per
-              prompt; DAPO uses eight.</p></div>
-          <div class="suite-tags" aria-label="Training domains">
-            <span>Math</span><span>Code</span><span>Science</span><span>Logic</span>
-            <span>Simulation</span><span>Tabular reasoning</span>
-          </div>
+          <p class="eyebrow">Main results</p>
+          <h2>Higher overall scores on both backbones</h2>
+          <p class="lead">Training uses 92K verifiable prompts from GURU across math, code, science, logic, simulation, and tabular reasoning, with equal compute across methods. Evaluation covers 17 benchmarks, including held-out LiveBench and instruction following.</p>
         </div>
         <div class="result-grid">
-          <article class="result-card"><h3>Qwen3-4B</h3><p>Overall average across 17 benchmarks (0–100 scale).</p><div class="metric-block"><div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar " style="width: 58.1%"></div></div><span>58.10</span></div>
-<div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 56.75%"></div></div><span>56.75</span></div>
-<div class="bar-row"><span>RLOO</span><div class="bar-track"><div class="bar rloo" style="width: 56.42%"></div></div><span>56.42</span></div>
-<div class="bar-row"><span>Base</span><div class="bar-track"><div class="bar rloo" style="width: 50.16%"></div></div><span>50.16</span></div>
-</div></article><article class="result-card"><h3>OLMo-3-7B-Instruct-DPO</h3><p>Overall average across 17 benchmarks (0–100 scale).</p><div class="metric-block"><div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar " style="width: 49.92%"></div></div><span>49.92</span></div>
-<div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 47.96%"></div></div><span>47.96</span></div>
-<div class="bar-row"><span>RLOO</span><div class="bar-track"><div class="bar rloo" style="width: 48.32%"></div></div><span>48.32</span></div>
-<div class="bar-row"><span>Base</span><div class="bar-track"><div class="bar rloo" style="width: 34.79%"></div></div><span>34.79</span></div>
-</div></article>
+          <article class="result-card"><h3>Qwen3-4B</h3>
+      <p class="delta"><strong>+1.35 points</strong> over DAPO</p>
+      <div class="metric-block"><div class="bar-row"><span>POISE</span><div class="bar-track" aria-hidden="true"><div class="bar poise" style="width: 58.1%"></div></div><span>58.10</span></div>
+<div class="bar-row"><span>DAPO</span><div class="bar-track" aria-hidden="true"><div class="bar dapo" style="width: 56.75%"></div></div><span>56.75</span></div>
+<div class="bar-row"><span>RLOO</span><div class="bar-track" aria-hidden="true"><div class="bar rloo" style="width: 56.42%"></div></div><span>56.42</span></div>
+<div class="bar-row"><span>Base</span><div class="bar-track" aria-hidden="true"><div class="bar base" style="width: 50.16%"></div></div><span>50.16</span></div></div>
+      <div class="axis" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div>
+    </article>
+          <article class="result-card"><h3>OLMo-3-7B-Instruct-DPO</h3>
+      <p class="delta"><strong>+1.96 points</strong> over DAPO</p>
+      <div class="metric-block"><div class="bar-row"><span>POISE</span><div class="bar-track" aria-hidden="true"><div class="bar poise" style="width: 49.92%"></div></div><span>49.92</span></div>
+<div class="bar-row"><span>DAPO</span><div class="bar-track" aria-hidden="true"><div class="bar dapo" style="width: 47.96%"></div></div><span>47.96</span></div>
+<div class="bar-row"><span>RLOO</span><div class="bar-track" aria-hidden="true"><div class="bar rloo" style="width: 48.32%"></div></div><span>48.32</span></div>
+<div class="bar-row"><span>Base</span><div class="bar-track" aria-hidden="true"><div class="bar base" style="width: 34.79%"></div></div><span>34.79</span></div></div>
+      <div class="axis" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div>
+    </article>
         </div>
-        <p class="notes">All bars use the same 0–100 scale. Source: <a href="https://arxiv.org/html/2605.07579v3#S4.T1">Table 1</a>.</p>
+        <p class="notes">Overall benchmark average; all bars use a 0–100 scale. POISE and RLOO use 2 rollouts per prompt; DAPO uses 8. Checkpoints are selected on the validation split. <a href="https://arxiv.org/html/2605.07579v3#S4.T1">Table 1</a>.</p>
+        <div class="note-box"><strong>At the same rollout allocation:</strong> POISE also improves on RLOO by 1.68 points on Qwen3 and 1.60 points on OLMo. RLOO uses the paired response’s reward as a baseline; POISE predicts it from internal states. Individual benchmarks vary: POISE exceeds both DAPO and RLOO on 11 of 17 benchmarks for each backbone.</div>
         <details class="result-details">
           <summary>Full results: all 17 benchmarks</summary>
           <p class="notes">Scores reproduced from Table 1. The overall score averages all 17
@@ -1137,85 +376,23 @@
 <tr><td>Instruction Following</td><th scope="row">IFEval</th><td>78.56</td><td>76.34</td><td><strong>78.93</strong></td><td>77.26</td></tr>
 <tr><td>All benchmarks</td><th scope="row">Average</th><td>34.79</td><td>48.32</td><td>47.96</td><td><strong>49.92</strong></td></tr></tbody></table></div>
         </details>
-        <div class="note-box"><strong>Value estimation at the same rollout allocation.</strong>
-          RLOO subtracts the paired response's reward; POISE predicts the baseline from its internal
-          states. POISE improves on RLOO by 1.68 points on Qwen3 and 1.60 points on OLMo.
-          Individual benchmarks vary; POISE leads on 11 of 17 benchmarks for each backbone.</div>
-        <div class="visual-grid">
-          <figure class="figure"><img src="assets/gradient-variance-v3.svg" alt="Qwen3-4B Adam-moment variance proxy for POISE, RLOO, and rescaled DAPO" loading="lazy" width="509" height="361">
-            <figcaption class="caption">Training stability on Qwen3-4B. The Adam-moment proxy is
-              summed across parameters; it is not exact gradient variance. DAPO is rescaled to
-              account for its advantage normalization. POISE shows a lower proxy over most of training.
-              <a href="https://arxiv.org/html/2605.07579v3#S4.F4">Figure 4</a>.</figcaption></figure>
-          <figure class="figure"><img src="assets/estimator-tracking-v3.svg" alt="Value-estimator MAE and Pearson correlation over Qwen3-4B training" loading="lazy" width="486" height="361">
-            <figcaption class="caption">The value estimator tracks the changing policy. Every 40
-              steps, predictions are evaluated against empirical values from eight rollouts per
-              validation prompt. MAE and Pearson correlation remain stable.
-              <a href="https://arxiv.org/html/2605.07579v3#S4.F5">Figure 5</a>.</figcaption></figure>
-        </div>
       </section>
 
       <section id="analysis">
-        <div class="section-title">
-          <p class="eyebrow">Analysis</p>
-          <h2>What the estimator is actually learning</h2>
-          <p class="lead">
-            Controlled ablations test the input features and cross-rollout construction.
-            Additional experiments compare POISE with token-level PPO and assess value prediction
-            across domains and model scales.
-          </p>
-        </div>
-
-        <div class="cards">
-          <article class="card">
-            <h3>Tracks policy drift</h3>
-            <p>
-              Online analyses evaluate the estimator every 40 training steps against empirical Avg@8
-              values from the current actor checkpoint, testing whether it remains useful as the policy changes.
-            </p>
-          </article>
-          <article class="card">
-            <h3>Works beyond math</h3>
-            <p>
-              Held-out value prediction spans math, coding, tool calling, and instruction following
-              on four backbones, including GPT-OSS-120B. The probe improves MAE in 16 of 20
-              model–dataset pairs and Pearson correlation in 18 of 20.
-            </p>
-          </article>
-          <article class="card">
-            <h3>Mostly linear signal</h3>
-            <p>
-              The linear ridge probe matches or exceeds the tested MLPs in Pearson correlation,
-              although some MLPs have lower MAE. Layer and pooling-window ablations show that
-              value prediction is not confined to a single extraction setting.
-              <a href="https://arxiv.org/html/2605.07579v3#A8.SS3">Extraction ablations</a>;
-              <a href="https://arxiv.org/html/2605.07579v3#A8.SS4">probe architectures</a>.
-            </p>
-          </article>
-        </div>
-
-        <div class="analysis-card" style="margin-top: 28px;">
-          <h3>Which signals support value estimation?</h3>
-          <p>On Qwen3-4B, reasoning states and entropy are more predictive than prompt states alone.
-            Combining the three gives the lowest MAE and highest correlation in this ablation.
-            Response length is a weaker predictor. These are held-out value-prediction scores,
-            separate from downstream RL accuracy.</p>
-          <div class="table-scroll" tabindex="0" role="region" aria-label="Estimator input-feature ablation">
-            <table class="data-table" data-source="S5.tab1">
-              <caption>Input features · Table 2</caption>
-              <thead><tr><th scope="col">Probe input</th><th scope="col">MAE ↓</th><th scope="col">Pearson r ↑</th></tr></thead>
-              <tbody><tr><th scope="row">Prompt hidden states only</th><td>0.234</td><td>0.569</td></tr>
-<tr><th scope="row">Reasoning hidden states only</th><td>0.132</td><td>0.821</td></tr>
-<tr><th scope="row">Mean entropy only</th><td>0.152</td><td>0.780</td></tr>
-<tr><th scope="row">Response length only</th><td>0.251</td><td>0.494</td></tr>
-<tr><th scope="row">Full estimator</th><td>0.126</td><td>0.838</td></tr></tbody>
-            </table>
-          </div>
-          <p class="notes">Evaluated against empirical Avg@8 values.
-            <a href="https://arxiv.org/html/2605.07579v3#S5.tab1">Table 2</a>.</p>
-        </div>
-
-        <div class="visual-grid" aria-label="Qwen3-4B value-estimator results on all five datasets">
+        <div class="section-title"><p class="eyebrow">Analysis</p><h2>From value prediction to policy learning</h2></div>
+        <article class="analysis-part" id="probe">
+          <h3><span class="question-number">01</span> Can internal states predict value?</h3>
+          <p>On Qwen3-4B and DAPO-Math, the probe achieves <strong>Pearson r = 0.870 and MAE = 0.141</strong>, compared with 0.676 and 0.262 for a finetuned Qwen3-4B critic. Both use the same reward-labeled data; the critic reads the prompt alone, while the probe also observes generated trajectory features.</p>
+          <figure class="figure compact-figure">
+      <a class="figure-link" href="assets/value-estimation-v3.svg" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: Held-out value prediction by the internal-state probe and a Qwen3-4B critic">
+        <img src="assets/value-estimation-v3.svg" alt="Held-out value prediction by the internal-state probe and a Qwen3-4B critic" width="751" height="417" loading="lazy">
+      </a>
+      <figcaption>Qwen3-4B on DAPO-Math. Predictions are compared with empirical Avg@8 pass rates on held-out prompts. <a href="assets/value-estimation-v3.svg" target="_blank" rel="noopener noreferrer">Open full size ↗</a></figcaption>
+    </figure>
+          <p>Across five datasets and four backbones, including GPT-OSS-120B, the probe improves MAE in <strong>16 of 20</strong> model–dataset pairs and correlation in <strong>18 of 20</strong>. These experiments measure held-out value prediction.</p>
+          <details><summary>Value-prediction results across all five datasets</summary>
+            <p class="notes">Qwen3-4B results from <a href="https://arxiv.org/html/2605.07579v3#A7.T10">Table 10</a>. Pearson correlation measures association with empirical Avg@8 values; MAE measures absolute prediction error.</p>
+            <div class="visual-grid" aria-label="Qwen3-4B value-estimator results on all five datasets">
           <article class="chart-card">
             <h3>Pearson correlation</h3>
             <p>Higher is better. Qwen3-4B value prediction across RLVR domains.</p>
@@ -1298,53 +475,67 @@
             <div class="legend"><span><i class="poise-dot"></i>Internal-state probe</span><span><i class="critic-dot"></i>Critic</span></div>
           </article>
         </div>
+          </details>
+        </article>
 
-        <div class="result-grid">
-          <article class="result-card"><h3>Cross-rollout ablation</h3>
-            <p>In controlled Qwen3-4B math training, full POISE reaches 50.1% Avg@32 across seven
-              benchmarks, versus 40.7% for the same-rollout variant and 47.5% for a prompt-only
-              estimator. Both variants use one rollout per prompt; full POISE uses two.
-              <a href="https://arxiv.org/html/2605.07579v3#S5.T3">Table 3</a>.</p></article>
-          <article class="result-card"><h3>Comparison with token-level PPO</h3>
-            <p>On the main multi-domain suite, POISE scores 58.10 versus PPO's 57.24 on Qwen3,
-              and 49.92 versus 49.33 on OLMo. PPO uses a separate full-parameter token-level
-              critic and one rollout per prompt. PPO is stronger in some individual domains.
-              <a href="https://arxiv.org/html/2605.07579v3#A7.T11">Table 11</a>.</p></article>
-        </div>
-        <div class="note-box"><strong>Instruction-following training.</strong>
-          Instruction following is held out from the main GURU training mixture. In a separate
-          experiment trained on IF-RLVR, POISE achieves the best IFEval and IFBench scores among
-          the compared methods on Qwen3-4B and DeepSeek-R1-Distill-Qwen-1.5B.
-          <a href="https://arxiv.org/html/2605.07579v3#A5.T8">Table 8</a>.</div>
-        <p class="notes">Value-prediction charts above: Qwen3-4B results from
-          <a href="https://arxiv.org/html/2605.07579v3#A7.T10">Table 10</a>.
-          Figures are reproduced from <a href="https://arxiv.org/abs/2605.07579v3">Choi et al., arXiv v3</a>
-          under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
-        <p class="notes"><strong>Scope.</strong> The experiments use fixed compute budgets;
-          behavior over substantially longer training horizons remains untested. The estimator
-          predicts sequence-level value. Token-level credit assignment, non-verifiable rewards,
-          and long-horizon agentic tasks are future directions.
-          <a href="https://arxiv.org/html/2605.07579v3#S7">Limitations</a>.</p>
+        <article class="analysis-part" id="features">
+          <h3><span class="question-number">02</span> Which inputs make the estimate useful?</h3>
+          <p>Reasoning states and entropy are more predictive than prompt states alone. Combining them gives the lowest MAE and highest correlation in this Qwen3-4B ablation; response length is a weaker predictor.</p>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Estimator input-feature ablation"><table class="data-table" data-source="S5.tab1">
+              <caption>Input features · Table 2</caption>
+              <thead><tr><th scope="col">Probe input</th><th scope="col">MAE ↓</th><th scope="col">Pearson r ↑</th></tr></thead>
+              <tbody><tr><th scope="row">Prompt hidden states only</th><td>0.234</td><td>0.569</td></tr>
+<tr><th scope="row">Reasoning hidden states only</th><td>0.132</td><td>0.821</td></tr>
+<tr><th scope="row">Mean entropy only</th><td>0.152</td><td>0.780</td></tr>
+<tr><th scope="row">Response length only</th><td>0.251</td><td>0.494</td></tr>
+<tr><th scope="row">Full estimator</th><td>0.126</td><td>0.838</td></tr></tbody>
+            </table></div>
+          <p class="notes">Held-out value prediction against empirical Avg@8 values. MAE: lower is better. Pearson r: higher is better. <a href="https://arxiv.org/html/2605.07579v3#S5.tab1">Table 2</a>.</p>
+          <details><summary>Probe architecture, layer, and pooling ablations</summary>
+            <p>The linear ridge probe matches or exceeds the tested MLPs in Pearson correlation, although some MLPs have lower MAE. Layer and pooling-window ablations show that value prediction is not confined to a single extraction setting. <a href="https://arxiv.org/html/2605.07579v3#A8.SS3">Extraction ablations</a>; <a href="https://arxiv.org/html/2605.07579v3#A8.SS4">probe architectures</a>.</p>
+          </details>
+        </article>
+
+        <article class="analysis-part" id="learning">
+          <h3><span class="question-number">03</span> Does the estimator help RL training?</h3>
+          <p>In controlled Qwen3-4B math training, full POISE reaches <strong>50.1% Avg@32</strong> across seven benchmarks, versus 40.7% for the same-rollout variant and 47.5% for a prompt-only estimator.</p>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Cross-rollout RL ablation">
+            <table class="data-table"><caption>Controlled math training · Table 3</caption><thead><tr><th scope="col">Value estimator</th><th scope="col">Rollouts / prompt</th><th scope="col">Avg@32 ↑</th></tr></thead>
+            <tbody><tr><th scope="row">Same-rollout features</th><td>1</td><td>40.7%</td></tr><tr><th scope="row">Prompt-only features</th><td>1</td><td>47.5%</td></tr><tr><th scope="row">POISE: cross-rollout features</th><td>2</td><td>50.1%</td></tr></tbody></table>
+          </div>
+          <p class="notes">Rollout counts differ between full POISE and these variants. <a href="https://arxiv.org/html/2605.07579v3#S5.T3">Table 3</a>.</p>
+          <p style="margin-top:24px">During the main multi-domain training run, POISE shows a lower Adam-moment variance proxy over most of training, while its value-prediction error and correlation remain stable as the policy changes.</p>
+          <details><summary>Training dynamics: variance proxy and estimator tracking</summary><div class="visual-grid"><figure class="figure ">
+      <a class="figure-link" href="assets/gradient-variance-v3.svg" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: Qwen3-4B Adam-moment variance proxy for POISE, RLOO, and rescaled DAPO">
+        <img src="assets/gradient-variance-v3.svg" alt="Qwen3-4B Adam-moment variance proxy for POISE, RLOO, and rescaled DAPO" width="509" height="361" loading="lazy">
+      </a>
+      <figcaption>The Adam-moment proxy is summed across parameters; it is not exact gradient variance. DAPO is rescaled for its advantage normalization. <a href="https://arxiv.org/html/2605.07579v3#S4.F4">Figure 4</a>. <a href="assets/gradient-variance-v3.svg" target="_blank" rel="noopener noreferrer">Open full size ↗</a></figcaption>
+    </figure><figure class="figure ">
+      <a class="figure-link" href="assets/estimator-tracking-v3.svg" target="_blank" rel="noopener noreferrer" aria-label="Open full-size figure: Value-estimator MAE and Pearson correlation over Qwen3-4B training">
+        <img src="assets/estimator-tracking-v3.svg" alt="Value-estimator MAE and Pearson correlation over Qwen3-4B training" width="486" height="361" loading="lazy">
+      </a>
+      <figcaption>Every 40 steps, predictions are evaluated against empirical values from eight rollouts per validation prompt. MAE and Pearson correlation remain stable. <a href="https://arxiv.org/html/2605.07579v3#S4.F5">Figure 5</a>. <a href="assets/estimator-tracking-v3.svg" target="_blank" rel="noopener noreferrer">Open full size ↗</a></figcaption>
+    </figure></div></details>
+          <details><summary>Additional experiments: token-level PPO and instruction following</summary>
+            <h4>Comparison with token-level PPO</h4>
+            <p>On the main multi-domain suite, POISE scores 58.10 versus PPO’s 57.24 on Qwen3, and 49.92 versus 49.33 on OLMo. PPO uses a separate full-parameter token-level critic and one rollout per prompt. PPO is stronger in some individual domains. <a href="https://arxiv.org/html/2605.07579v3#A7.T11">Table 11</a>.</p>
+            <h4>Separate instruction-following training</h4>
+            <p>Instruction following is held out from the main GURU training mixture. In a separate experiment trained on IF-RLVR, POISE achieves the best IFEval and IFBench scores among the compared methods on Qwen3-4B and DeepSeek-R1-Distill-Qwen-1.5B. <a href="https://arxiv.org/html/2605.07579v3#A5.T8">Table 8</a>.</p>
+          </details>
+          <p class="scope"><strong>Scope.</strong> The experiments use fixed compute budgets; substantially longer training horizons remain untested. POISE predicts sequence-level value. Token-level credit assignment, non-verifiable rewards, and long-horizon agentic tasks are future directions. <a href="https://arxiv.org/html/2605.07579v3#S7">Limitations</a>.</p>
+        </article>
       </section>
 
-      <section id="cite">
-        <div class="section-title">
-          <p class="eyebrow">BibTeX</p>
-          <h2>Citation</h2>
-          <p class="lead">NeurIPS 2026 citation. The arXiv link provides access to the paper.</p>
-        </div>
-        <pre><code>@inproceedings{choi2026poise,
+      <section id="cite"><div class="section-title"><p class="eyebrow">BibTeX</p><h2>Citation</h2><p class="lead">NeurIPS 2026</p></div><pre><code>@inproceedings{choi2026poise,
   title = {Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States},
   author = {Yunho Choi and Jongwon Lim and Woojin Ahn and Minjae Oh and Jeonghoon Shim and Yohan Jo},
   booktitle = {Advances in Neural Information Processing Systems},
   year = {2026},
   url = {https://arxiv.org/abs/2605.07579}
-}</code></pre>
-      </section>
+}</code></pre></section>
     </main>
-
-    <footer>
-      POISE, Human Oriented Language Intelligence Lab.
+    <footer><p><strong>POISE</strong> · Policy Optimization with Internal State Value Estimation<br>Human Oriented Language Intelligence Lab (HOLI)<br>Graduate School of Data Science, Seoul National University</p>
+      <p>Figures reproduced from <a href="https://arxiv.org/abs/2605.07579v3">Choi et al., arXiv v3</a> under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
     </footer>
   </body>
 </html>
