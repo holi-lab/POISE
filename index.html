@@ -34,7 +34,9 @@
       "@type": "ScholarlyArticle",
       "headline": "Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States",
       "name": "Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States",
-      "datePublished": "2026",
+      "datePublished": "2026-05-08",
+      "dateModified": "2026-10-03",
+      "version": "arXiv v3",
       "author": [
         { "@type": "Person", "name": "Yunho Choi" },
         { "@type": "Person", "name": "Jongwon Lim", "url": "https://elijah0430.github.io/" },
@@ -504,6 +506,10 @@
         background: var(--opponent);
       }
 
+      .bar.rloo { background: var(--muted); }
+      section, #plain { scroll-margin-top: 100px; }
+      .metric-heading { flex-wrap: wrap; }
+
       .result-card p {
         margin: 14px 0 0;
         color: var(--muted);
@@ -850,7 +856,7 @@
     <main id="top">
       <section class="hero">
         <div class="hero-inner">
-          <p class="kicker">arXiv preprint &middot; cs.LG &middot; 2026</p>
+          <p class="kicker">Accepted to NeurIPS 2026</p>
           <h1>Your Language Model is Its Own Critic</h1>
           <p class="paper-subtitle">
             Reinforcement Learning with Value Estimation from Actor&rsquo;s Internal States
@@ -860,18 +866,21 @@
             Jeonghoon Shim, <a href="https://yohanjo.github.io/lab.html">Yohan Jo</a><sup>&dagger;</sup>
           </p>
           <p class="notes"><sup>*</sup>Equal contribution. <sup>&dagger;</sup>Corresponding author.</p>
+          <p class="notes">Updated for <a href="https://arxiv.org/abs/2605.07579v3">arXiv v3</a> &middot; October 1, 2026 revision</p>
           <div class="links" aria-label="Paper links">
             <a class="button" href="https://arxiv.org/pdf/2605.07579" target="_blank" rel="noopener noreferrer">Paper</a>
             <a class="button secondary" href="https://arxiv.org/abs/2605.07579" target="_blank" rel="noopener noreferrer">arXiv</a>
+            <a class="button secondary" href="https://github.com/holi-lab/POISE" target="_blank" rel="noopener noreferrer">Code</a>
             <a class="button secondary" href="#cite">BibTeX</a>
           </div>
 
           <div class="tldr">
             <strong>TL;DR</strong>
             <p>
-              POISE asks how the actor's internal representations can be folded back into RL
-              training: it turns hidden states from the model's own generation process into a
-              baseline function for RL updates, without a separate critic or many extra samples.
+              POISE uses a lightweight probe over the actor's internal states to estimate a value
+              baseline. Two independent rollouts supply each other's baselines, preserving the
+              unbiased policy-gradient estimator. Across six-domain RL training, POISE improves
+              the overall benchmark average on Qwen3-4B and OLMo-3-7B-Instruct-DPO.
             </p>
           </div>
 
@@ -882,10 +891,11 @@
               feedback, such as whether a final math answer is correct. To turn those raw rewards
               into useful policy-gradient updates, RL methods usually subtract a baseline, so the
               update reflects whether a response did better or worse than expected for the prompt.
-              Existing methods estimate that baseline either with a separate critic model or with
-              multiple rollouts from the same prompt. POISE studies how to use the actor's own
-              hidden states for that baseline, so the training loop can use information the model
-              already computed while generating its answer.
+              GRPO estimates this baseline from multiple responses to the same prompt. Under a
+              fixed rollout budget, larger groups leave fewer distinct prompts in each batch.
+              PPO instead trains a separate policy-scale critic. POISE learns a baseline from
+              the actor's hidden states and token entropy, using two rollouts per prompt and
+              updating a small probe alongside the policy.
             </p>
           </div>
         </div>
@@ -896,10 +906,9 @@
           <p class="eyebrow">Introduction</p>
           <h2>Why internal value estimation matters</h2>
           <p class="lead">
-            A good baseline function converts raw rewards into advantages by comparing each
-            response with the reward expected for its prompt. POISE replaces expensive baselines
-            with a lightweight estimator trained on hidden states and entropy statistics that the
-            actor already computes during generation.
+            Stable multi-domain RL needs both a reliable baseline and diverse prompts in each
+            batch. With the total rollout budget fixed, more responses per prompt reduce prompt
+            diversity. POISE combines a learned baseline with just two rollouts per prompt.
           </p>
         </div>
 
@@ -909,8 +918,8 @@
             <p>Instead of training another language-model-sized network, POISE uses the actor's internal states.</p>
           </article>
           <article class="card">
-            <h3>Less rollout overhead</h3>
-            <p>POISE avoids spending many same-prompt samples just to estimate a group-relative baseline.</p>
+            <h3>More prompts per batch</h3>
+            <p>With the same rollout budget, POISE uses two responses per prompt, versus eight for the DAPO baseline.</p>
           </article>
           <article class="card">
             <h3>Stable online learning</h3>
@@ -925,14 +934,14 @@
           <h2>Internal states carry a usable value signal</h2>
           <p class="lead">
             Before using internal states inside RL training, POISE first tests whether they can support
-            prompt-level value estimation. On held-out DAPO-Math rollouts, a lightweight probe trained
-            on hidden states and entropy is compared against a separately trained policy-scale critic.
+            prompt-level value estimation. The comparison spans five datasets and four policy
+            backbones, including GPT-OSS-120B. The figure below shows Qwen3-4B on DAPO-Math.
           </p>
         </div>
 
         <div class="estimator-grid">
           <figure class="figure">
-            <img src="assets/value-estimation.png" alt="Preliminary value-estimation comparison between POISE probe and critic">
+            <img src="assets/value-estimation-v3.svg" alt="Preliminary value-estimation comparison between POISE probe and critic">
             <figcaption class="caption">
               Preliminary value-prediction experiment. Predictions are compared against empirical
               Avg@8 pass rates on held-out prompts.
@@ -951,8 +960,8 @@
               <h3>Competitive with a large critic</h3>
               <p>
                 The comparison critic is finetuned from Qwen3-4B, but reports r = 0.676 and
-                MAE = 0.262 in the same setting. POISE therefore starts from a simple observation:
-                the actor already carries a useful value signal.
+                MAE = 0.262 in the same setting. This critic reads the prompt alone; the probe also
+                observes generated trajectory features. Both use the same reward-labeled training data.
               </p>
             </article>
           </div>
@@ -964,8 +973,9 @@
           <p class="eyebrow">Method</p>
           <h2>Cross-rollout value estimation</h2>
           <p class="lead">
-            A generated answer should not directly create its own baseline, because that can bias
-            the policy gradient. POISE solves this with a simple paired-rollout trick.
+            A baseline derived from the same response can bias the policy gradient. POISE predicts
+            each response's baseline from the other independently sampled response. The probe is
+            trained against rewards from other rollouts, so its target is expected prompt-level reward.
           </p>
         </div>
 
@@ -990,7 +1000,7 @@
               <b>2</b>
               <div>
                 <h3>Read internal signals</h3>
-                <p>POISE collects hidden-state pools and token entropy statistics from each response.</p>
+                <p>Mean-pool the final prompt and reasoning token states; average token entropy separately over all generated, reasoning, and answer tokens.</p>
               </div>
             </div>
             <div class="step">
@@ -1004,7 +1014,7 @@
               <b>4</b>
               <div>
                 <h3>Update the estimator</h3>
-                <p>A small probe is trained online so its predictions follow the changing actor.</p>
+                <p>Compute baselines before fitting on the current batch. Then fit the ridge probe using paired-rollout rewards and a buffer of recent trajectories.</p>
               </div>
             </div>
           </div>
@@ -1014,76 +1024,50 @@
       <section id="results">
         <div class="section-title">
           <p class="eyebrow">Results</p>
-          <h2>Comparable accuracy with less wall-clock time</h2>
-          <p class="lead">
-            Across AMC23/24, AIME24/25/26, HMMT25, and BRUMO25, Avg@32 estimates pass rate
-            from 32 sampled answers per problem. Against DAPO, a state-of-the-art GRPO-based
-            RLVR method for mathematical reasoning, POISE reaches comparable accuracy while
-            avoiding the same rollout-heavy baseline estimation.
-          </p>
+          <h2>Higher overall scores across reasoning domains</h2>
+          <p class="lead">On the six-domain GURU training corpus, POISE achieves the highest overall
+            benchmark average among the main baselines on both backbones: 1.35 points above DAPO
+            on Qwen3-4B and 1.96 points on OLMo-3-7B-Instruct-DPO.</p>
         </div>
-
         <div class="benchmark-suite">
-          <div>
-            <strong>Benchmark suite</strong>
-            <p>
-              The reported math suite spans olympiad-style reasoning problems from AMC, AIME,
-              HMMT, and BRUMO. DAPO does not train a separate critic; POISE targets the same
-              baseline-estimation bottleneck from the actor's internal states.
-            </p>
-          </div>
-          <div class="suite-tags" aria-label="Reported math benchmarks">
-            <span>AMC23/24</span>
-            <span>AIME24/25/26</span>
-            <span>HMMT25</span>
-            <span>BRUMO25</span>
+          <div><strong>Six training domains, 17 evaluation benchmarks</strong>
+            <p>Training uses 92K verifiable prompts with an equal compute budget across methods.
+              Evaluation covers the six training domains, plus LiveBench and instruction following.
+              Checkpoints are selected on the validation split. POISE and RLOO use two rollouts per
+              prompt; DAPO uses eight.</p></div>
+          <div class="suite-tags" aria-label="Training domains">
+            <span>Math</span><span>Code</span><span>Science</span><span>Logic</span>
+            <span>Simulation</span><span>Tabular reasoning</span>
           </div>
         </div>
-
         <div class="result-grid">
-          <article class="result-card">
-            <h3>Accuracy across the suite</h3>
-            <p>
-              The average is not meant to hide dataset-level variation; it summarizes whether POISE
-              reaches the same regime as the SOTA DAPO baseline across the seven reported math tasks.
-            </p>
-            <div class="metric-block">
-              <div class="metric-heading"><span>Qwen3-4B</span><span>Avg@32</span></div>
-              <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 98.4%"></div></div><span>0.500</span></div>
-              <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>0.508</span></div>
-            </div>
-            <div class="metric-block">
-              <div class="metric-heading"><span>DeepSeek-R1-Distill-Qwen-1.5B</span><span>Avg@32</span></div>
-              <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 100%"></div></div><span>0.303</span></div>
-              <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 97.7%"></div></div><span>0.296</span></div>
-            </div>
-          </article>
-
-          <article class="result-card">
-            <h3>Training cost</h3>
-            <p>
-              DAPO is the harder comparison because it is already a strong GRPO-based RLVR method.
-              POISE aims for comparable accuracy while spending less wall-clock time on baseline estimation.
-            </p>
-            <div class="metric-block">
-              <div class="metric-heading"><span>Qwen3-4B on 2x B200</span><span>time</span></div>
-              <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 73.5%"></div></div><span>36h</span></div>
-              <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>49h</span></div>
-            </div>
-            <div class="metric-block">
-              <div class="metric-heading"><span>DeepSeek 1.5B</span><span>time</span></div>
-              <div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar" style="width: 75%"></div></div><span>18h</span></div>
-              <div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 100%"></div></div><span>24h</span></div>
-            </div>
-          </article>
+          <article class="result-card"><h3>Qwen3-4B</h3><p>Overall average across 17 benchmarks (0–100 scale).</p><div class="metric-block"><div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar " style="width: 58.1%"></div></div><span>58.10</span></div>
+<div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 56.75%"></div></div><span>56.75</span></div>
+<div class="bar-row"><span>RLOO</span><div class="bar-track"><div class="bar rloo" style="width: 56.42%"></div></div><span>56.42</span></div>
+<div class="bar-row"><span>Base</span><div class="bar-track"><div class="bar rloo" style="width: 50.16%"></div></div><span>50.16</span></div>
+</div></article><article class="result-card"><h3>OLMo-3-7B-Instruct-DPO</h3><p>Overall average across 17 benchmarks (0–100 scale).</p><div class="metric-block"><div class="bar-row"><span>POISE</span><div class="bar-track"><div class="bar " style="width: 49.92%"></div></div><span>49.92</span></div>
+<div class="bar-row"><span>DAPO</span><div class="bar-track"><div class="bar dapo" style="width: 47.96%"></div></div><span>47.96</span></div>
+<div class="bar-row"><span>RLOO</span><div class="bar-track"><div class="bar rloo" style="width: 48.32%"></div></div><span>48.32</span></div>
+<div class="bar-row"><span>Base</span><div class="bar-track"><div class="bar rloo" style="width: 34.79%"></div></div><span>34.79</span></div>
+</div></article>
         </div>
-
-        <figure class="figure wide-figure">
-          <img src="assets/results-dynamics.png" alt="POISE benchmark table and training dynamics">
-          <figcaption class="caption">
-            Reported benchmark accuracy, wall-clock dynamics, gradient norms, and estimator calibration.
-          </figcaption>
-        </figure>
+        <p class="notes">All bars use the same 0–100 scale. Source: <a href="https://arxiv.org/html/2605.07579v3#S4.T1">Table 1</a>.</p>
+        <div class="note-box"><strong>Value estimation at the same rollout allocation.</strong>
+          RLOO subtracts the paired response's reward; POISE predicts the baseline from its internal
+          states. POISE improves on RLOO by 1.68 points on Qwen3 and 1.60 points on OLMo.
+          Individual benchmarks vary; POISE leads on 11 of 17 benchmarks for each backbone.</div>
+        <div class="visual-grid">
+          <figure class="figure"><img src="assets/gradient-variance-v3.svg" alt="Qwen3-4B Adam-moment variance proxy for POISE, RLOO, and rescaled DAPO" loading="lazy">
+            <figcaption class="caption">Training stability on Qwen3-4B. The Adam-moment proxy is
+              summed across parameters; it is not exact gradient variance. DAPO is rescaled to
+              account for its advantage normalization. POISE shows a lower proxy over most of training.
+              <a href="https://arxiv.org/html/2605.07579v3#S4.F4">Figure 4</a>.</figcaption></figure>
+          <figure class="figure"><img src="assets/estimator-tracking-v3.svg" alt="Value-estimator MAE and Pearson correlation over Qwen3-4B training" loading="lazy">
+            <figcaption class="caption">The value estimator tracks the changing policy. Every 40
+              steps, predictions are evaluated against empirical values from eight rollouts per
+              validation prompt. MAE and Pearson correlation remain stable.
+              <a href="https://arxiv.org/html/2605.07579v3#S4.F5">Figure 5</a>.</figcaption></figure>
+        </div>
       </section>
 
       <section id="analysis">
@@ -1091,9 +1075,9 @@
           <p class="eyebrow">Analysis</p>
           <h2>What the estimator is actually learning</h2>
           <p class="lead">
-            After showing that the probe is reliable enough to use, the paper analyzes why it works:
-            whether it tracks a changing policy, generalizes beyond math, and depends on simple,
-            linearly accessible internal signals.
+            Controlled ablations test the input features and cross-rollout construction.
+            Additional experiments compare POISE with token-level PPO and assess value prediction
+            across domains and model scales.
           </p>
         </div>
 
@@ -1101,22 +1085,24 @@
           <article class="card">
             <h3>Tracks policy drift</h3>
             <p>
-              Online analyses evaluate the estimator every 10 training steps against empirical Avg@8
+              Online analyses evaluate the estimator every 40 training steps against empirical Avg@8
               values from the current actor checkpoint, testing whether it remains useful as the policy changes.
             </p>
           </article>
           <article class="card">
             <h3>Works beyond math</h3>
             <p>
-              The same internal-state idea is tested on math, coding, tool-calling, and instruction-following
-              RLVR tasks, suggesting the signal is not just a math benchmark artifact.
+              Held-out value prediction spans math, coding, tool calling, and instruction following
+              on four backbones, including GPT-OSS-120B. The probe improves MAE in 16 of 20
+              model–dataset pairs and Pearson correlation in 18 of 20.
             </p>
           </article>
           <article class="card">
             <h3>Mostly linear signal</h3>
             <p>
-              Probe ablations show that a linear ridge probe is competitive with larger MLP probes,
-              supporting the claim that value-relevant information is readily accessible.
+              The linear ridge probe matches or exceeds the tested MLPs in Pearson correlation,
+              although some MLPs have lower MAE. Combining prompt states, reasoning states,
+              and entropy gives the best prediction in the input-feature ablation.
             </p>
           </article>
         </div>
@@ -1191,20 +1177,34 @@
           </article>
         </div>
 
-        <div class="note-box">
-          <strong>Bottom line.</strong>
-          The preliminary section establishes that the probe is accurate enough to motivate the method.
-          The analysis section then asks a broader question: which internal signals make that possible,
-          whether the estimator survives online policy drift, and whether the same idea works outside
-          the main math-training experiment.
+        <div class="result-grid">
+          <article class="result-card"><h3>Cross-rollout ablation</h3>
+            <p>In controlled Qwen3-4B math training, full POISE reaches 50.1% Avg@32 across seven
+              benchmarks, versus 40.7% for the same-rollout variant and 47.5% for a prompt-only
+              estimator. Both variants use one rollout per prompt; full POISE uses two.
+              <a href="https://arxiv.org/html/2605.07579v3#S5.T3">Table 3</a>.</p></article>
+          <article class="result-card"><h3>Comparison with token-level PPO</h3>
+            <p>On the main multi-domain suite, POISE scores 58.10 versus PPO's 57.24 on Qwen3,
+              and 49.92 versus 49.33 on OLMo. PPO uses a separate full-parameter token-level
+              critic and one rollout per prompt. PPO is stronger in some individual domains.
+              <a href="https://arxiv.org/html/2605.07579v3#A7.T11">Table 11</a>.</p></article>
         </div>
+        <div class="note-box"><strong>Instruction-following training.</strong>
+          Instruction following is held out from the main GURU training mixture. In a separate
+          experiment trained on IF-RLVR, POISE achieves the best IFEval and IFBench scores among
+          the compared methods on Qwen3-4B and DeepSeek-R1-Distill-Qwen-1.5B.
+          <a href="https://arxiv.org/html/2605.07579v3#A5.T8">Table 8</a>.</div>
+        <p class="notes">Value-prediction charts above: Qwen3-4B results from
+          <a href="https://arxiv.org/html/2605.07579v3#A7.T10">Table 10</a>.
+          Figures are reproduced from <a href="https://arxiv.org/abs/2605.07579v3">Choi et al., arXiv v3</a>
+          under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
       </section>
 
       <section id="cite">
         <div class="section-title">
           <p class="eyebrow">BibTeX</p>
           <h2>Citation</h2>
-          <p class="lead">Citation metadata is based on the arXiv preprint record.</p>
+          <p class="lead">Accepted to NeurIPS 2026. The citation below points to the arXiv record.</p>
         </div>
         <pre><code>@misc{choi2026poise,
   title = {Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States},
@@ -1213,7 +1213,8 @@
   eprint = {2605.07579},
   archivePrefix = {arXiv},
   primaryClass = {cs.LG},
-  note = {Preprint}
+  url = {https://arxiv.org/abs/2605.07579},
+  note = {Accepted to NeurIPS 2026}
 }</code></pre>
       </section>
     </main>
