@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Your Language Model is Its Own Critic | POISE</title>
-    <meta name="description" content="POISE is a reinforcement learning method that estimates value from a language model actor's internal states for efficient reinforcement learning with verifiable rewards." />
+    <meta name="description" content="POISE learns a value baseline from the actor's internal states with two rollouts per prompt, combining value estimation and prompt diversity for stable multi-domain RLVR." />
     <meta name="author" content="Yunho Choi, Jongwon Lim, Woojin Ahn, Minjae Oh, Jeonghoon Shim, Yohan Jo" />
     <link rel="canonical" href="https://holi-lab.github.io/POISE/" />
     <meta name="robots" content="index, follow" />
@@ -21,13 +21,13 @@
     <meta name="citation_arxiv_id" content="2605.07579" />
     <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2605.07579" />
     <meta property="og:title" content="Your Language Model is Its Own Critic | POISE" />
-    <meta property="og:description" content="Reinforcement learning with value estimation from a language model actor's internal states." />
+    <meta property="og:description" content="Stable multi-domain RL with value baselines from the actor's internal states and two rollouts per prompt." />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://holi-lab.github.io/POISE/" />
     <meta property="og:image" content="https://holi-lab.github.io/POISE/assets/poise-overview.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Your Language Model is Its Own Critic | POISE" />
-    <meta name="twitter:description" content="Reinforcement learning with value estimation from a language model actor's internal states." />
+    <meta name="twitter:description" content="Stable multi-domain RL with value baselines from the actor's internal states and two rollouts per prompt." />
     <meta name="twitter:image" content="https://holi-lab.github.io/POISE/assets/poise-overview.png" />
     <script type="application/ld+json">
     {
@@ -37,7 +37,7 @@
       "name": "Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States",
       "datePublished": "2026-05-08",
       "dateModified": "2026-10-03",
-      "version": "arXiv v3",
+      "version": "arXiv v4",
       "author": [
         { "@type": "Person", "name": "Yunho Choi" },
         { "@type": "Person", "name": "Jongwon Lim", "url": "https://elijah0430.github.io/" },
@@ -107,7 +107,7 @@ strong, b { font-weight: 600; }
 .nav a { font-size: 14px; color: var(--muted); padding: 5px 9px; white-space: nowrap; }
 .nav a:hover { color: var(--text); text-decoration: underline; }
 main { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
-main > section { padding: 36px 0 8px; }
+main > section { padding: 44px 0 8px; }
 main > .hero { padding: 0; }
 .hero-inner { padding: 52px 0 28px; text-align: center; }
 h1 { max-width: 30ch; margin: 0 auto 18px; font-size: clamp(1.7rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.2; text-wrap: balance; }
@@ -124,26 +124,21 @@ h1 { max-width: 30ch; margin: 0 auto 18px; font-size: clamp(1.7rem, 4vw, 2.6rem)
 .button.citation:hover { background: var(--surface); }
 .tldr { margin: 64px 0 0; text-align: left; }
 .plain-summary { margin: 30px 0 0; text-align: left; }
-.tldr p, .plain-summary p { margin: 0; }
+.tldr p, .plain-summary p:last-child { margin: 0; }
+.plain-summary p + p { margin-top: 14px; }
 h2 { margin: 0 0 14px; font-size: 24px; font-weight: 700; line-height: 1.3; }
 h3 { margin: 26px 0 8px; font-size: 17.6px; font-weight: 600; line-height: 1.4; }
 .section-title { margin: 0 0 20px; text-align: left; }
 .eyebrow { margin: 0 0 6px; color: var(--light); font-size: 12.5px; font-weight: 600; }
 .lead { margin: 0; font-size: 16px; line-height: 1.65; }
-.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 22px 0 0; }
-.card { padding-top: 14px; border-top: 1px solid var(--border); min-width: 0; }
-.card h3 { margin: 0 0 8px; }
-.card p { margin: 0; font-size: 14.5px; color: var(--muted); }
 .figure { min-width: 0; background: white; }
 .figure img { width: 100%; }
 .figure > a { display: block; cursor: zoom-in; }
 .caption { margin: 10px 0 0; font-size: 13.5px; color: var(--muted); line-height: 1.55; }
 .visual-grid, .result-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 24px 0 0; align-items: start; }
-.motivation-grid { align-items: center; }
+.motivation-grid { align-items: start; }
 .equation { padding: 14px 8px; background: var(--surface); text-align: center; font-family: Georgia, serif; font-size: 20px; margin: 16px 0; }
-.method-grid, .estimator-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 24px; }
-.estimator-grid > .figure { max-width: 760px; width: 100%; margin: 0 auto; }
-.analysis-stack { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.method-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 24px; }
 .analysis-card { min-width: 0; }
 .analysis-card h3 { margin: 0 0 8px; }
 .analysis-card p { margin: 0 0 14px; }
@@ -153,9 +148,9 @@ h3 { margin: 26px 0 8px; font-size: 17.6px; font-weight: 600; line-height: 1.4; 
 .step > b { font-size: 15px; line-height: 1.6; }
 .step h3 { margin: 0 0 5px; font-size: 16px; }
 .step p { margin: 0; font-size: 14.5px; color: var(--muted); }
-.result-card, .chart-card { min-width: 0; border: 1px solid var(--border); border-radius: 6px; padding: 16px; }
-.result-card h3, .chart-card h3 { margin: 0 0 8px; }
-.result-card p, .chart-card > p { margin: 0; font-size: 14px; color: var(--muted); }
+.result-card { min-width: 0; border: 1px solid var(--border); border-radius: 6px; padding: 16px; }
+.result-card h3 { margin: 0 0 8px; }
+.result-card p { margin: 0; font-size: 14px; color: var(--muted); }
 .metric-block { margin-top: 18px; }
 .bar-row { display: grid; grid-template-columns: 54px minmax(0, 1fr) 48px; gap: 10px; align-items: center; margin-top: 10px; font-size: 13px; font-variant-numeric: tabular-nums; }
 .bar-row > span:last-child { text-align: right; }
@@ -164,12 +159,11 @@ h3 { margin: 26px 0 8px; font-size: 17.6px; font-weight: 600; line-height: 1.4; 
 .bar.dapo { background: var(--dapo); }
 .bar.rloo { background: var(--rloo); }
 .bar.base { background: #9095a0; }
+.setup-title { margin: 0 0 8px; }
 .benchmark-suite { margin-top: 22px; }
-.benchmark-suite strong { display: block; margin-bottom: 6px; }
 .benchmark-suite p { margin: 0; }
 .suite-tags { display: flex; flex-wrap: wrap; gap: 5px 12px; margin-top: 10px; color: var(--muted); font-size: 13px; }
 .suite-tags span + span::before { content: "·"; margin-right: 12px; color: var(--light); }
-.note-box { margin: 24px 0 0; padding: 12px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 14.5px; }
 .table-scroll { max-width: 100%; overflow-x: auto; margin: 16px 0 6px; }
 .data-table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; border: 1px solid var(--border); }
 .data-table caption { text-align: left; margin-bottom: 10px; font-size: 15px; font-weight: 600; }
@@ -178,31 +172,31 @@ h3 { margin: 26px 0 8px; font-size: 17.6px; font-weight: 600; line-height: 1.4; 
 .data-table thead th { background: var(--surface); color: var(--muted); font-size: 13px; font-weight: 600; }
 .data-table tbody th { font-weight: 400; }
 .data-table[data-source="S4.T1"] { min-width: 620px; }
-.data-table tbody tr:last-child { background: var(--surface); }
+.data-table:not(.prediction-table) tbody tr:last-child { background: var(--surface); }
 .result-details { border: 1px solid var(--border); border-radius: 6px; margin: 20px 0 0; padding: 10px 14px; }
 .result-details summary { cursor: pointer; font-size: 14px; font-weight: 600; }
 .result-details summary:hover { color: var(--primary); }
 .result-details[open] summary { margin-bottom: 10px; }
-.chart-row { margin-top: 18px; }
-.chart-label { font-size: 13px; font-weight: 600; }
-.compare-bars { display: grid; gap: 6px; margin-top: 7px; }
-.compare-bar { display: grid; grid-template-columns: 40px minmax(0, 1fr) 44px; gap: 8px; align-items: center; font-size: 12px; font-variant-numeric: tabular-nums; }
-.compare-bar > span:last-child { text-align: right; }
-.compare-track { height: 10px; overflow: hidden; background: #ecedf1; }
-.compare-fill { height: 100%; }
-.compare-fill.poise, .poise-dot { background: var(--probe); }
-.compare-fill.critic, .critic-dot { background: var(--critic); }
-.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 16px; font-size: 12px; color: var(--muted); }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
-.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
 pre { margin: 0; padding: 18px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
 code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
 footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border-top: 1px solid var(--border); font-size: 13px; color: var(--light); }
+.probe-figure { max-width: 760px; margin: 24px auto 0; }
+.supporting-text { margin: 22px 0 0; }
+.subsection { margin-top: 30px; }
+.subsection > h3 { margin: 0 0 10px; }
+.subsection > p { margin-bottom: 14px; }
+.subsection .visual-grid { margin-top: 18px; }
+.detail-intro { margin: 14px 0 0; font-size: 14px; }
+.detail-block { margin-top: 18px; }
+.detail-block h3 { margin: 0 0 8px; font-size: 16px; }
+.detail-block p { margin: 0; font-size: 14px; }
+.scope-note { margin: 30px 0 0; padding-top: 18px; border-top: 1px solid var(--border); font-size: 14px; color: var(--muted); }
+.prediction-table { min-width: 480px; }
+footer p { margin: 0 0 5px; }
 @media (max-width: 760px) {
   .nav a { padding: 5px 7px; }
   .nav a.optional { display: none; }
-  .visual-grid, .result-grid, .cards, .analysis-stack { grid-template-columns: 1fr; gap: 22px; }
-  .cards { gap: 16px; }
+  .visual-grid, .result-grid { grid-template-columns: 1fr; gap: 22px; }
   .hero-inner { padding-top: 36px; }
   .paper-subtitle { font-size: 19px; }
   .motivation-grid > .figure { max-width: 550px; width: 100%; margin: 0 auto; }
@@ -268,25 +262,34 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
           <div class="tldr">
             <h2>TL;DR</h2>
             <p>
-              POISE uses a lightweight probe over the actor's internal states to estimate a value
-              baseline. Two independent rollouts supply each other's baselines, preserving the
-              unbiased REINFORCE baseline term. Across six-domain RL training, POISE improves
-              the overall benchmark average on Qwen3-4B and OLMo-3-7B-Instruct-DPO.
+              POISE uses the actor's internal states to learn a reliable value baseline with only
+              two rollouts per prompt, leaving room for more distinct prompts in each training batch.
+              This supports stable multi-domain RL without a separate LLM-scale critic.
+              Experiments show higher overall benchmark scores on two backbones and a lower
+              training variance proxy on Qwen3-4B.
             </p>
           </div>
 
           <div class="plain-summary" id="plain">
             <h2>What is this paper about?</h2>
             <p>
-              Reinforcement learning with verifiable rewards trains language models from outcome
-              feedback, such as whether a final math answer is correct. To turn those raw rewards
-              into useful policy-gradient updates, RL methods usually subtract a baseline, so the
-              update reflects whether a response did better or worse than expected for the prompt.
-              GRPO estimates this baseline from multiple responses to the same prompt. Under a
-              fixed rollout budget, larger groups leave fewer distinct prompts in each batch.
-              PPO instead trains a separate policy-scale critic. POISE learns a baseline from
-              the actor's hidden states and token entropy, using two rollouts per prompt and
-              updating a small probe alongside the policy.
+              Stable reinforcement learning with verifiable rewards (RLVR) depends on both the
+              quality of the value baseline and the diversity of prompts in each batch. A baseline
+              estimates the reward expected for a prompt, allowing the policy to learn from how a
+              response performs relative to that expectation. GRPO estimates it by averaging rewards
+              from several responses to the same prompt. Larger groups improve this estimate but,
+              under a fixed rollout budget, leave fewer distinct prompts per batch. That loss of
+              diversity can increase gradient variance, especially across different reasoning domains.
+              PPO instead learns a separate policy-scale critic, adding substantial training and memory cost.
+            </p>
+            <p>
+              POISE (Policy Optimization with Internal State Value Estimation) learns the baseline
+              from hidden states and token entropy already computed by the actor. A lightweight
+              probe is updated alongside the policy, and two independent
+              responses provide each other's baselines. This brings internal-state value estimation
+              into policy optimization while retaining high prompt diversity. We evaluate the resulting
+              algorithm through six-domain RL training, alongside analyses of value prediction and
+              the cross-rollout design.
             </p>
           </div>
         </div>
@@ -294,50 +297,32 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
 
       <section id="introduction">
         <div class="section-title">
-          <p class="eyebrow">Introduction</p>
-          <h2>Why internal value estimation matters</h2>
-          <p class="lead">
-            Stable multi-domain RL needs both a reliable baseline and diverse prompts in each
-            batch. With the total rollout budget fixed, more responses per prompt reduce prompt
-            diversity. POISE combines a learned baseline with just two rollouts per prompt.
-          </p>
+          <p class="eyebrow">Motivation</p>
+          <h2>Why prompt diversity matters</h2>
+          <p class="lead">With the baseline held fixed, allocating the same rollout budget to more
+            distinct prompts reduces the between-prompt component of gradient variance.
+            A controlled experiment finds a larger allocation effect in multi-domain training than
+            in math-only training.</p>
         </div>
-
-        <div class="cards">
-          <article class="card">
-            <h3>No separate critic model</h3>
-            <p>Instead of training another language-model-sized network, POISE uses the actor's internal states.</p>
-          </article>
-          <article class="card">
-            <h3>More prompts per batch</h3>
-            <p>With the same rollout budget, POISE uses two responses per prompt, versus eight for the DAPO baseline.</p>
-          </article>
-          <article class="card">
-            <h3>Stable online learning</h3>
-            <p>The estimator is updated as the policy changes, using current and recent rollouts.</p>
-          </article>
-        </div>
-
         <div class="visual-grid motivation-grid">
           <article class="analysis-card">
-            <h3>Why prompt diversity reduces variance</h3>
-            <p>Let B = n × m be the total rollout budget: n prompts with m responses each.
-              For a fixed policy and prompt-specific baseline, the batch gradient covariance is</p>
+            <h3>Same rollout budget, different allocation</h3>
+            <p>Let B = n × m be the batch budget: n prompts with m responses each.
+              For a fixed policy and prompt-specific baseline,</p>
             <div class="equation" aria-label="Covariance of the batch gradient equals within-prompt covariance divided by B plus m times between-prompt covariance divided by B">
               Cov(ĝ) = Σ<sub>w</sub> / B + (m / B) Σ<sub>b</sub>
             </div>
-            <p>Σ<sub>w</sub> and Σ<sub>b</sub> are the within-prompt and between-prompt
-              covariance components. The within-prompt term stays fixed while the between-prompt
-              term scales with m. This isolates the effect of rollout allocation with the baseline held fixed.
-              <a href="https://arxiv.org/html/2605.07579v3#S2.SS2">Section 2.2</a>.</p>
+            <p>Σ<sub>w</sub> and Σ<sub>b</sub> describe within-prompt and between-prompt
+              gradient covariance. Increasing m leaves the first term unchanged and scales up
+              the second. A useful baseline therefore needs to work with few responses per prompt.
+              <a href="https://arxiv.org/html/2605.07579v4#S2.SS2">Section 2.2</a>.</p>
           </article>
           <figure class="figure">
             <a href="assets/prompt-diversity-v3.svg" target="_blank" rel="noopener noreferrer" title="Open full-size figure"><img src="assets/prompt-diversity-v3.svg" alt="Estimated gradient variance for one versus eight rollouts per prompt in math-only and multi-domain training" loading="lazy" width="529" height="367"></a>
-            <figcaption class="caption">Controlled allocation experiment on OLMo-3-7B-Think-DPO
-              with Dolci-Think-RL-7B subsets. Both allocations use the same total rollout budget
-              and fixed baselines from eight separate precomputed rollouts. Eight responses per
-              prompt yield higher estimated variance, with a larger gap on the multi-domain subset.
-              <a href="https://arxiv.org/html/2605.07579v3#S2.F2.fig1">Figure 1</a>.</figcaption>
+            <figcaption class="caption">Adam-moment variance proxy for OLMo-3-7B-Think-DPO
+              on Dolci-Think-RL-7B subsets.
+              Both allocations use the same rollout budget and fixed baselines from eight separate,
+              precomputed rollouts. <a href="https://arxiv.org/html/2605.07579v4#S2.F2.fig1">Figure 1</a>.</figcaption>
           </figure>
         </div>
       </section>
@@ -345,41 +330,42 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
       <section id="probe">
         <div class="section-title">
           <p class="eyebrow">Preliminary</p>
-          <h2>Internal states carry a usable value signal</h2>
-          <p class="lead">
-            Before using internal states inside RL training, POISE first tests whether they can support
-            prompt-level value estimation. The comparison spans five datasets and four policy
-            backbones, including GPT-OSS-120B. The figure below shows Qwen3-4B on DAPO-Math.
-          </p>
+          <h2>Can the actor supply its own value estimate?</h2>
+          <p class="lead">We first test whether a lightweight probe can predict expected verifier
+            reward from the actor's internal signals. On held-out Qwen3-4B / DAPO-Math prompts,
+            the probe reaches Pearson r = 0.870 and MAE = 0.141, compared with r = 0.676 and
+            MAE = 0.262 for a separately trained Qwen3-4B critic.</p>
         </div>
-
-        <div class="estimator-grid">
-          <figure class="figure">
-            <a href="assets/value-estimation-v3.svg" target="_blank" rel="noopener noreferrer" title="Open full-size figure"><img src="assets/value-estimation-v3.svg" alt="Preliminary value-estimation comparison between POISE probe and critic" width="751" height="417"></a>
-            <figcaption class="caption">
-              Preliminary value-prediction experiment. Predictions are compared against empirical
-              Avg@8 pass rates on held-out prompts.
-            </figcaption>
-          </figure>
-          <div class="analysis-stack">
-            <article class="analysis-card">
-              <h3>Internal states are predictive</h3>
-              <p>
-                The internal-state probe reaches Pearson r = 0.870 and MAE = 0.141 on the
-                preliminary benchmark, indicating that verifier-reward information is accessible
-                from the actor's own forward-pass signals.
-              </p>
-            </article>
-            <article class="analysis-card">
-              <h3>Competitive with a large critic</h3>
-              <p>
-                The comparison critic is finetuned from Qwen3-4B, but reports r = 0.676 and
-                MAE = 0.262 in the same setting. This critic reads the prompt alone; the probe also
-                observes generated trajectory features. Both use the same reward-labeled training data.
-              </p>
-            </article>
+        <figure class="figure probe-figure">
+          <a href="assets/value-estimation-v3.svg" target="_blank" rel="noopener noreferrer" title="Open full-size figure"><img src="assets/value-estimation-v3.svg" alt="Probe and critic value predictions against empirical Avg@8 rewards on Qwen3-4B with DAPO-Math" loading="lazy" width="751" height="417"></a>
+          <figcaption class="caption">Predictions are evaluated against empirical Avg@8 rewards.
+            Both estimators use the same reward-labeled training data; the critic reads the prompt,
+            while the probe also observes generated trajectory features.
+            <a href="https://arxiv.org/html/2605.07579v4#S2.F2.fig2">Figure 2</a>.</figcaption>
+        </figure>
+        <p class="supporting-text">Across five datasets and four backbones, including GPT-OSS-120B,
+          the probe improves MAE in 16 of 20 model–dataset pairs and Pearson correlation in 18 of 20.
+          These experiments assess held-out value prediction; the RL results appear below.</p>
+        <details class="result-details">
+          <summary>Value prediction across domains</summary>
+          <p class="detail-intro">Qwen3-4B results across all five datasets. The full comparison also
+            includes DeepSeek-R1-Distill-Qwen-1.5B, DeepSeek-R1-Distill-Qwen-7B, and GPT-OSS-120B.
+            <a href="https://arxiv.org/html/2605.07579v4#A7.T10">Table 10</a>.</p>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Qwen3-4B value prediction across domains">
+            <table class="data-table prediction-table" data-source="A7.T10">
+              <caption>Held-out value prediction · Qwen3-4B</caption>
+              <thead><tr><th scope="col" rowspan="2">Dataset</th><th scope="colgroup" colspan="2">MAE ↓</th><th scope="colgroup" colspan="2">Pearson r ↑</th></tr>
+                <tr><th scope="col">Probe</th><th scope="col">Critic</th><th scope="col">Probe</th><th scope="col">Critic</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">DAPO-Math</th><td>0.141</td><td>0.262</td><td>0.870</td><td>0.676</td></tr>
+                <tr><th scope="row">DeepScaleR</th><td>0.231</td><td>0.393</td><td>0.609</td><td>0.384</td></tr>
+                <tr><th scope="row">AceCoder</th><td>0.234</td><td>0.499</td><td>0.612</td><td>0.056</td></tr>
+                <tr><th scope="row">ToolDial</th><td>0.188</td><td>0.303</td><td>0.840</td><td>0.440</td></tr>
+                <tr><th scope="row">IF-RLVR</th><td>0.195</td><td>0.350</td><td>0.642</td><td>0.150</td></tr>
+              </tbody>
+            </table>
           </div>
-        </div>
+        </details>
       </section>
 
       <section id="method">
@@ -387,9 +373,10 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
           <p class="eyebrow">Method</p>
           <h2>Cross-rollout value estimation</h2>
           <p class="lead">
-            A baseline derived from the same response can bias the policy gradient. POISE predicts
-            each response's baseline from the other independently sampled response. The probe is
-            trained against rewards from other rollouts, so its target is expected prompt-level reward.
+            Response-dependent features are useful for prediction, but using them as a baseline
+            for that same response can bias the policy gradient. POISE samples two independent
+            responses and computes each one's baseline from the other's features. This preserves
+            the zero-expectation REINFORCE baseline term.
           </p>
         </div>
 
@@ -398,7 +385,9 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
             <a href="assets/poise-overview.png" target="_blank" rel="noopener noreferrer" title="Open full-size figure"><img src="assets/poise-overview.png" alt="POISE cross-rollout algorithm diagram" width="1540" height="583"></a>
             <figcaption class="caption">
               The two responses are independent samples for the same prompt. Each one uses the other
-              response's internal-state features to estimate a baseline.
+              response's internal-state features to estimate a baseline. The probe is trained on
+              the other response's reward, targeting expected prompt-level reward.
+              <a href="https://arxiv.org/html/2605.07579v4#S3.F3">Figure 3</a>.
             </figcaption>
           </figure>
 
@@ -414,14 +403,14 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
               <b>2</b>
               <div>
                 <h3>Read internal signals</h3>
-                <p>Mean-pool the final prompt and reasoning token states; average token entropy separately over all generated, reasoning, and answer tokens.</p>
+                <p>At a fixed layer, mean-pool the final prompt-token and reasoning-token windows separately. Average token entropy separately over all generated, reasoning, and answer tokens.</p>
               </div>
             </div>
             <div class="step">
               <b>3</b>
               <div>
                 <h3>Swap predicted values</h3>
-                <p>Each response subtracts a value estimated from the other response, preserving independence.</p>
+                <p>For each response, subtract the baseline predicted from the other response from its reward.</p>
               </div>
             </div>
             <div class="step">
@@ -444,7 +433,7 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
             on Qwen3-4B and 1.96 points on OLMo-3-7B-Instruct-DPO.</p>
         </div>
         <div class="benchmark-suite">
-          <div><strong>Six training domains, 17 evaluation benchmarks</strong>
+          <div><h3 class="setup-title">Six training domains, 17 evaluation benchmarks</h3>
             <p>Training uses 92K verifiable prompts with an equal compute budget across methods.
               Evaluation covers the six training domains, plus LiveBench and instruction following.
               Checkpoints are selected on the validation split. POISE and RLOO use two rollouts per
@@ -465,13 +454,17 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
 <div class="bar-row"><span>Base</span><div class="bar-track"><div class="bar base" style="width: 34.79%"></div></div><span>34.79</span></div>
 </div></article>
         </div>
-        <p class="notes">All bars use the same 0–100 scale. Source: <a href="https://arxiv.org/html/2605.07579v3#S4.T1">Table 1</a>.</p>
+        <p class="notes">All bars use the same 0–100 scale. Source: <a href="https://arxiv.org/html/2605.07579v4#S4.T1">Table 1</a>.</p>
+        <p class="supporting-text"><strong>Value estimation at the same rollout allocation.</strong>
+          RLOO subtracts the paired response's reward; POISE predicts the baseline from its internal
+          states. POISE improves on RLOO by 1.68 points on Qwen3 and 1.60 points on OLMo.
+          Individual benchmarks vary; POISE exceeds both DAPO and RLOO on 11 of 17 benchmarks for each backbone.</p>
         <details class="result-details">
           <summary>Full results: all 17 benchmarks</summary>
           <p class="notes">Scores reproduced from Table 1. The overall score averages all 17
             benchmarks; each benchmark retains its own scoring rule. AIME uses Avg@32.
             Bold marks the highest score within each backbone, including ties. Scroll horizontally
-            on small screens. See <a href="https://arxiv.org/html/2605.07579v3#A4.SS5">the evaluation protocol</a>.</p>
+            on small screens. See <a href="https://arxiv.org/html/2605.07579v4#A4.SS5">the evaluation protocol</a>.</p>
           <div class="table-scroll" tabindex="0" role="region" aria-label="Qwen3-4B benchmark results"><table class="data-table" data-source="S4.T1" data-model="Qwen3-4B"><caption>Qwen3-4B</caption><thead><tr><th scope="col">Domain</th><th scope="col">Benchmark</th><th scope="col">Base</th><th scope="col">RLOO<br>m = 2</th><th scope="col">DAPO<br>m = 8</th><th scope="col">POISE<br>m = 2</th></tr></thead><tbody>
 <tr><td>Code</td><th scope="row">HumanEval</th><td>87.20</td><td>93.90</td><td><strong>95.73</strong></td><td>94.51</td></tr>
 <tr><td>Code</td><th scope="row">LiveCodeBench</th><td>22.58</td><td>30.82</td><td>24.73</td><td><strong>35.13</strong></td></tr>
@@ -510,69 +503,55 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
 <tr><td>Instruction Following</td><th scope="row">IFEval</th><td>78.56</td><td>76.34</td><td><strong>78.93</strong></td><td>77.26</td></tr>
 <tr><td>All benchmarks</td><th scope="row">Average</th><td>34.79</td><td>48.32</td><td>47.96</td><td><strong>49.92</strong></td></tr></tbody></table></div>
         </details>
-        <div class="note-box"><strong>Value estimation at the same rollout allocation.</strong>
-          RLOO subtracts the paired response's reward; POISE predicts the baseline from its internal
-          states. POISE improves on RLOO by 1.68 points on Qwen3 and 1.60 points on OLMo.
-          Individual benchmarks vary; POISE exceeds both DAPO and RLOO on 11 of 17 benchmarks for each backbone.</div>
+
+        <div class="subsection" id="training-dynamics">
+          <h3>Training stability and online value estimation</h3>
+          <p>On Qwen3-4B, POISE has a lower Adam-moment variance proxy over most of training,
+            while its probe remains predictive as the policy changes.</p>
         <div class="visual-grid">
           <figure class="figure"><a href="assets/gradient-variance-v3.svg" target="_blank" rel="noopener noreferrer" title="Open full-size figure"><img src="assets/gradient-variance-v3.svg" alt="Qwen3-4B Adam-moment variance proxy for POISE, RLOO, and rescaled DAPO" loading="lazy" width="509" height="361"></a>
-            <figcaption class="caption">Training stability on Qwen3-4B. The Adam-moment proxy is
-              summed across parameters; it is not exact gradient variance. DAPO is rescaled to
-              account for its advantage normalization. POISE shows a lower proxy over most of training.
-              <a href="https://arxiv.org/html/2605.07579v3#S4.F4">Figure 4</a>.</figcaption></figure>
+            <figcaption class="caption"><strong>Training variance proxy.</strong> Adam-moment estimates are summed
+              across parameters; this is not exact gradient variance. DAPO is rescaled for its
+              advantage normalization.
+              <a href="https://arxiv.org/html/2605.07579v4#S4.F4">Figure 4</a>.</figcaption></figure>
           <figure class="figure"><a href="assets/estimator-tracking-v3.svg" target="_blank" rel="noopener noreferrer" title="Open full-size figure"><img src="assets/estimator-tracking-v3.svg" alt="Value-estimator MAE and Pearson correlation over Qwen3-4B training" loading="lazy" width="486" height="361"></a>
-            <figcaption class="caption">The value estimator tracks the changing policy. Every 40
-              steps, predictions are evaluated against empirical values from eight rollouts per
-              validation prompt. MAE and Pearson correlation remain stable.
-              <a href="https://arxiv.org/html/2605.07579v3#S4.F5">Figure 5</a>.</figcaption></figure>
+            <figcaption class="caption"><strong>Online prediction accuracy.</strong> Every 40 training steps, predictions
+              are evaluated against empirical values from eight rollouts per validation prompt.
+              MAE and Pearson correlation remain stable.
+              <a href="https://arxiv.org/html/2605.07579v4#S4.F5">Figure 5</a>.</figcaption></figure>
         </div>
+        </div>
+        <details class="result-details">
+          <summary>Additional RL comparisons: PPO and instruction following</summary>
+          <div class="detail-block">
+            <h3>Comparison with token-level PPO</h3>
+            <p>On the main multi-domain suite, POISE scores 58.10 versus PPO's 57.24 on Qwen3,
+              and 49.92 versus 49.33 on OLMo. PPO uses a separate full-parameter token-level
+              critic, GAE, and one rollout per prompt. PPO is stronger on some individual benchmarks.
+              <a href="https://arxiv.org/html/2605.07579v4#A7.T11">Table 11</a>.</p>
+          </div>
+          <div class="detail-block">
+            <h3>Instruction-following training</h3>
+            <p>Instruction following is held out from the main GURU training mixture. In a separate
+              experiment trained on IF-RLVR, POISE achieves the best IFEval and IFBench scores among
+              the compared methods on Qwen3-4B and DeepSeek-R1-Distill-Qwen-1.5B.
+              <a href="https://arxiv.org/html/2605.07579v4#A5.T8">Table 8</a>.</p>
+          </div>
+        </details>
       </section>
 
       <section id="analysis">
         <div class="section-title">
           <p class="eyebrow">Analysis</p>
-          <h2>What the estimator is actually learning</h2>
-          <p class="lead">
-            Controlled ablations test the input features and cross-rollout construction.
-            Additional experiments compare POISE with token-level PPO and assess value prediction
-            across domains and model scales.
-          </p>
+          <h2>Which design choices matter?</h2>
+          <p class="lead">Two ablations examine different parts of POISE: which signals help predict
+            value, and how those signals should enter the policy update.</p>
         </div>
-
-        <div class="cards">
-          <article class="card">
-            <h3>Tracks policy drift</h3>
-            <p>
-              Online analyses evaluate the estimator every 40 training steps against empirical Avg@8
-              values from the current actor checkpoint, testing whether it remains useful as the policy changes.
-            </p>
-          </article>
-          <article class="card">
-            <h3>Works beyond math</h3>
-            <p>
-              Held-out value prediction spans math, coding, tool calling, and instruction following
-              on four backbones, including GPT-OSS-120B. The probe improves MAE in 16 of 20
-              model–dataset pairs and Pearson correlation in 18 of 20.
-            </p>
-          </article>
-          <article class="card">
-            <h3>Mostly linear signal</h3>
-            <p>
-              The linear ridge probe matches or exceeds the tested MLPs in Pearson correlation,
-              although some MLPs have lower MAE. Layer and pooling-window ablations show that
-              value prediction is not confined to a single extraction setting.
-              <a href="https://arxiv.org/html/2605.07579v3#A8.SS3">Extraction ablations</a>;
-              <a href="https://arxiv.org/html/2605.07579v3#A8.SS4">probe architectures</a>.
-            </p>
-          </article>
-        </div>
-
-        <div class="analysis-card" style="margin-top: 28px;">
-          <h3>Which signals support value estimation?</h3>
+        <div class="subsection">
+          <h3>Input features: reasoning states and entropy improve prediction</h3>
           <p>On Qwen3-4B, reasoning states and entropy are more predictive than prompt states alone.
-            Combining the three gives the lowest MAE and highest correlation in this ablation.
-            Response length is a weaker predictor. These are held-out value-prediction scores,
-            separate from downstream RL accuracy.</p>
+            Combining all three gives the lowest MAE and highest correlation in this ablation;
+            response length is a weaker predictor.</p>
           <div class="table-scroll" tabindex="0" role="region" aria-label="Estimator input-feature ablation">
             <table class="data-table" data-source="S5.tab1">
               <caption>Input features · Table 2</caption>
@@ -584,120 +563,43 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
 <tr><th scope="row">Full estimator</th><td>0.126</td><td>0.838</td></tr></tbody>
             </table>
           </div>
-          <p class="notes">Evaluated against empirical Avg@8 values.
-            <a href="https://arxiv.org/html/2605.07579v3#S5.tab1">Table 2</a>.</p>
+          <p class="notes">Held-out value-prediction scores against empirical Avg@8 rewards.
+            <a href="https://arxiv.org/html/2605.07579v4#S5.tab1">Table 2</a>.</p>
         </div>
-
-        <div class="visual-grid" aria-label="Qwen3-4B value-estimator results on all five datasets">
-          <article class="chart-card">
-            <h3>Pearson correlation</h3>
-            <p>Higher is better. Qwen3-4B value prediction across RLVR domains.</p>
-            <div class="chart-row">
-              <div class="chart-label"><span>Math (DAPO-Math)</span></div>
-              <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 87%"></div></div><span>0.870</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 67.6%"></div></div><span>0.676</span></div>
-              </div>
-            </div>
-            <div class="chart-row">
-              <div class="chart-label"><span>Math (DeepScaleR)</span></div>
-              <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 60.9%"></div></div><span>0.609</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 38.4%"></div></div><span>0.384</span></div>
-              </div>
-            </div>
-            <div class="chart-row">
-              <div class="chart-label"><span>Coding (AceCoder)</span></div>
-              <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 61.2%"></div></div><span>0.612</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 5.6%"></div></div><span>0.056</span></div>
-              </div>
-            </div>
-            <div class="chart-row">
-              <div class="chart-label"><span>Tool use (ToolDial)</span></div>
-              <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 84%"></div></div><span>0.840</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 44%"></div></div><span>0.440</span></div>
-              </div>
-            </div>
-            <div class="chart-row">
-              <div class="chart-label"><span>Instruction following (IF-RLVR)</span></div>
-              <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 64.2%"></div></div><span>0.642</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 15%"></div></div><span>0.150</span></div>
-              </div>
-            </div>
-            <div class="legend"><span><i class="poise-dot"></i>Internal-state probe</span><span><i class="critic-dot"></i>Critic</span></div>
-          </article>
-
-          <article class="chart-card">
-            <h3>Mean absolute error</h3>
-            <p>Lower is better. All bars use a 0–0.5 scale.</p>
-            <div class="chart-row">
-              <div class="chart-label"><span>Math (DAPO-Math)</span></div>
-              <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 28.2%"></div></div><span>0.141</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 52.4%"></div></div><span>0.262</span></div>
-              </div>
-            </div>
-            <div class="chart-row">
-              <div class="chart-label"><span>Math (DeepScaleR)</span></div>
-              <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 46.2%"></div></div><span>0.231</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 78.6%"></div></div><span>0.393</span></div>
-              </div>
-            </div>
-            <div class="chart-row">
-              <div class="chart-label"><span>Coding (AceCoder)</span></div>
-              <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 46.8%"></div></div><span>0.234</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 99.8%"></div></div><span>0.499</span></div>
-              </div>
-            </div>
-            <div class="chart-row">
-              <div class="chart-label"><span>Tool use (ToolDial)</span></div>
-              <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 37.6%"></div></div><span>0.188</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 60.6%"></div></div><span>0.303</span></div>
-              </div>
-            </div>
-            <div class="chart-row">
-              <div class="chart-label"><span>Instruction following (IF-RLVR)</span></div>
-              <div class="compare-bars">
-                <div class="compare-bar"><span>Probe</span><div class="compare-track"><div class="compare-fill poise" style="width: 39%"></div></div><span>0.195</span></div>
-                <div class="compare-bar"><span>Critic</span><div class="compare-track"><div class="compare-fill critic" style="width: 70%"></div></div><span>0.350</span></div>
-              </div>
-            </div>
-            <div class="legend"><span><i class="poise-dot"></i>Internal-state probe</span><span><i class="critic-dot"></i>Critic</span></div>
-          </article>
+        <div class="subsection">
+          <h3>Cross-rollout baselines in policy optimization</h3>
+          <p>In controlled Qwen3-4B math training, full POISE outperforms both the prompt-only
+            and same-rollout variants. The one-rollout variants see twice as many distinct prompts
+            at a fixed rollout budget, so these comparisons also change prompt diversity.</p>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Cross-rollout policy optimization ablation">
+            <table class="data-table" data-source="S5.T3">
+              <caption>Math RL · Qwen3-4B · Avg@32 over seven benchmarks</caption>
+              <thead><tr><th scope="col">Method</th><th scope="col">Rollouts / prompt</th><th scope="col">Avg@32 (%) ↑</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Base model</th><td>—</td><td>25.8</td></tr>
+                <tr><th scope="row">Prompt-only estimator</th><td>1</td><td>47.5</td></tr>
+                <tr><th scope="row">Same-rollout estimator</th><td>1</td><td>40.7</td></tr>
+                <tr><th scope="row">PPO with token-level critic</th><td>1</td><td>49.3</td></tr>
+                <tr><th scope="row">Full POISE</th><td>2</td><td><strong>50.1</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="notes">All RL variants use the same total rollout budget per update.
+            <a href="https://arxiv.org/html/2605.07579v4#S5.T3">Table 3</a>.</p>
         </div>
-
-        <div class="result-grid">
-          <article class="result-card"><h3>Cross-rollout ablation</h3>
-            <p>In controlled Qwen3-4B math training, full POISE reaches 50.1% Avg@32 across seven
-              benchmarks, versus 40.7% for the same-rollout variant and 47.5% for a prompt-only
-              estimator. Both variants use one rollout per prompt; full POISE uses two.
-              <a href="https://arxiv.org/html/2605.07579v3#S5.T3">Table 3</a>.</p></article>
-          <article class="result-card"><h3>Comparison with token-level PPO</h3>
-            <p>On the main multi-domain suite, POISE scores 58.10 versus PPO's 57.24 on Qwen3,
-              and 49.92 versus 49.33 on OLMo. PPO uses a separate full-parameter token-level
-              critic and one rollout per prompt. PPO is stronger in some individual domains.
-              <a href="https://arxiv.org/html/2605.07579v3#A7.T11">Table 11</a>.</p></article>
-        </div>
-        <div class="note-box"><strong>Instruction-following training.</strong>
-          Instruction following is held out from the main GURU training mixture. In a separate
-          experiment trained on IF-RLVR, POISE achieves the best IFEval and IFBench scores among
-          the compared methods on Qwen3-4B and DeepSeek-R1-Distill-Qwen-1.5B.
-          <a href="https://arxiv.org/html/2605.07579v3#A5.T8">Table 8</a>.</div>
-        <p class="notes">Value-prediction charts above: Qwen3-4B results from
-          <a href="https://arxiv.org/html/2605.07579v3#A7.T10">Table 10</a>.
-          Figures are reproduced from <a href="https://arxiv.org/abs/2605.07579v3">Choi et al., arXiv v3</a>
-          under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
-        <p class="notes"><strong>Scope.</strong> The experiments use fixed compute budgets;
+        <details class="result-details">
+          <summary>Probe architecture and feature extraction</summary>
+          <p class="detail-intro">The linear ridge probe matches or exceeds the tested MLPs in
+            Pearson correlation, although some MLPs have lower MAE. Layer and pooling-window
+            ablations show that value prediction is not confined to a single extraction setting.
+            <a href="https://arxiv.org/html/2605.07579v4#A8.SS3">Extraction ablations</a>;
+            <a href="https://arxiv.org/html/2605.07579v4#A8.SS4">probe architectures</a>.</p>
+        </details>
+        <p class="scope-note"><strong>Scope.</strong> The experiments use fixed compute budgets;
           behavior over substantially longer training horizons remains untested. The estimator
           predicts sequence-level value. Token-level credit assignment, non-verifiable rewards,
           and long-horizon agentic tasks are future directions.
-          <a href="https://arxiv.org/html/2605.07579v3#S7">Limitations</a>.</p>
+          <a href="https://arxiv.org/html/2605.07579v4#S7">Limitations</a>.</p>
       </section>
 
       <section id="cite">
@@ -716,7 +618,9 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
     </main>
 
     <footer>
-      POISE, Human Oriented Language Intelligence Lab.
+      <p>POISE, Human Oriented Language Intelligence Lab.</p>
+      <p>Figures reproduced from <a href="https://arxiv.org/abs/2605.07579">Choi et al.</a>
+        under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
     </footer>
   </body>
 </html>
