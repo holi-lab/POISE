@@ -106,7 +106,7 @@ strong, b { font-weight: 600; }
 .nav { display: flex; align-items: center; gap: 2px; }
 .nav a { font-size: 14px; color: var(--muted); padding: 5px 9px; white-space: nowrap; }
 .nav a:hover { color: var(--text); text-decoration: underline; }
-main { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+main { max-width: 1000px; margin: 0 auto; padding: 0 20px 36px; }
 main > section { padding: 44px 0 8px; }
 main > .hero { padding: 0; }
 .hero-inner { padding: 52px 0 28px; text-align: center; }
@@ -179,7 +179,6 @@ h3 { margin: 26px 0 8px; font-size: 17.6px; font-weight: 600; line-height: 1.4; 
 .result-details[open] summary { margin-bottom: 10px; }
 pre { margin: 0; padding: 18px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
 code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
-footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border-top: 1px solid var(--border); font-size: 13px; color: var(--light); }
 .probe-figure { max-width: 760px; margin: 24px auto 0; }
 .supporting-text { margin: 22px 0 0; }
 .subsection { margin-top: 30px; }
@@ -192,7 +191,6 @@ footer { max-width: 1000px; margin: 36px auto 0; padding: 20px 20px 36px; border
 .detail-block p { margin: 0; font-size: 14px; }
 .scope-note { margin: 30px 0 0; padding-top: 18px; border-top: 1px solid var(--border); font-size: 14px; color: var(--muted); }
 .prediction-table { min-width: 480px; }
-footer p { margin: 0 0 5px; }
 @media (max-width: 760px) {
   .nav a { padding: 5px 7px; }
   .nav a.optional { display: none; }
@@ -262,7 +260,8 @@ footer p { margin: 0 0 5px; }
           <div class="tldr">
             <h2>TL;DR</h2>
             <p>
-              POISE uses the actor's internal states to learn a reliable value baseline with only
+              Policy Optimization with Internal State Value Estimation (POISE) uses the actor's
+              internal states to learn a reliable value baseline with only
               two rollouts per prompt, leaving room for more distinct prompts in each training batch.
               This supports stable multi-domain RL without a separate LLM-scale critic.
               Experiments show higher overall benchmark scores on two backbones and a lower
@@ -283,8 +282,8 @@ footer p { margin: 0 0 5px; }
               PPO instead learns a separate policy-scale critic, adding substantial training and memory cost.
             </p>
             <p>
-              POISE (Policy Optimization with Internal State Value Estimation) learns the baseline
-              from hidden states and token entropy already computed by the actor. A lightweight
+              POISE learns the baseline from hidden states and token entropy already computed by
+              the actor. A lightweight
               probe is updated alongside the policy, and two independent
               responses provide each other's baselines. This brings internal-state value estimation
               into policy optimization while retaining high prompt diversity. We evaluate the resulting
@@ -617,10 +616,5 @@ footer p { margin: 0 0 5px; }
       </section>
     </main>
 
-    <footer>
-      <p>POISE, Human Oriented Language Intelligence Lab.</p>
-      <p>Figures reproduced from <a href="https://arxiv.org/abs/2605.07579">Choi et al.</a>
-        under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
-    </footer>
   </body>
 </html>
