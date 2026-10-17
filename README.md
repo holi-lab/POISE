@@ -79,7 +79,7 @@ Results are saved as `summary.json` and `summary.csv` in the output directory.
 ```bibtex
 @inproceedings{choi2026poise,
   title={Your Language Model is Its Own Critic: Reinforcement Learning with Value Estimation from Actor's Internal States},
-  author={Yunho Choi and Jongwon Lim and Woojin Ahn and Minjae Oh and Jeonghoon Shim and Yohan Jo},
+  author={Choi, Yunho and Lim, Jongwon and Ahn, Woojin and Oh, Minjae and Shim, Jeonghoon and Jo, Yohan},
   booktitle={Advances in Neural Information Processing Systems},
   year={2026},
   url={https://arxiv.org/abs/2605.07579}
