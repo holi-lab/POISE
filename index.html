@@ -269,35 +269,31 @@ main > section:not(.hero), .tldr, .plain-summary {
           <div class="tldr">
             <h2>TL;DR</h2>
             <p>
-              Policy Optimization with Internal State Value Estimation (POISE) uses the actor's
-              internal states to learn a reliable value baseline with only
-              two rollouts per prompt, leaving room for more distinct prompts in each training batch.
-              This supports stable multi-domain RL without a separate LLM-scale critic.
-              Experiments show higher overall benchmark scores on two backbones and a lower
-              training variance proxy on Qwen3-4B.
+              Policy Optimization with Internal State Value Estimation (POISE) learns a value
+              baseline from the actor's internal states, without a separate LLM-scale critic.
+              It uses two rollouts per prompt, allowing more distinct prompts within a fixed
+              rollout budget. In six-domain RL training, POISE improves overall benchmark scores
+              on two backbones and reduces the training variance proxy on Qwen3-4B.
             </p>
           </div>
 
           <div class="plain-summary" id="plain">
             <h2>What is this paper about?</h2>
             <p>
-              Stable reinforcement learning with verifiable rewards (RLVR) depends on both the
-              quality of the value baseline and the diversity of prompts in each batch. A baseline
-              estimates the reward expected for a prompt, allowing the policy to learn from how a
-              response performs relative to that expectation. GRPO estimates it by averaging rewards
-              from several responses to the same prompt. Larger groups improve this estimate but,
-              under a fixed rollout budget, leave fewer distinct prompts per batch. That loss of
-              diversity can increase gradient variance, especially across different reasoning domains.
-              PPO instead learns a separate policy-scale critic, adding substantial training and memory cost.
+              Stable reinforcement learning with verifiable rewards (RLVR) requires both a reliable
+              value baseline and diverse prompts in each batch. GRPO estimates the baseline—the
+              expected reward for a prompt—by averaging rewards from multiple responses to that
+              prompt. Larger groups improve the estimate but leave fewer distinct prompts under a
+              fixed rollout budget. This can increase gradient variance, especially in multi-domain
+              training. PPO learns a separate policy-scale critic, at substantial training and memory cost.
             </p>
             <p>
-              POISE learns the baseline from hidden states and token entropy already computed by
-              the actor. A lightweight
-              probe is updated alongside the policy, and two independent
-              responses provide each other's baselines. This brings internal-state value estimation
-              into policy optimization while retaining high prompt diversity. We evaluate the resulting
-              algorithm through six-domain RL training, alongside analyses of value prediction and
-              the cross-rollout design.
+              POISE estimates the baseline with a lightweight probe trained on the actor's hidden
+              states and token entropy. The probe is updated alongside the policy. For each prompt,
+              we sample two independent responses and predict each response's baseline from the
+              other's internal states. This cross-rollout construction preserves the zero-expectation
+              baseline term while allowing high prompt diversity. We evaluate value prediction,
+              policy optimization across six domains, and the contribution of this cross-rollout design.
             </p>
           </div>
         </div>
@@ -307,10 +303,9 @@ main > section:not(.hero), .tldr, .plain-summary {
         <div class="section-title">
           <p class="eyebrow">Motivation</p>
           <h2>Why prompt diversity matters</h2>
-          <p class="lead">With the baseline held fixed, allocating the same rollout budget to more
-            distinct prompts reduces the between-prompt component of gradient variance.
-            A controlled experiment finds a larger allocation effect in multi-domain training than
-            in math-only training.</p>
+          <p class="lead">At a fixed rollout budget and baseline, sampling more distinct prompts
+            reduces the between-prompt component of gradient variance. In our controlled experiment,
+            the reduction is larger in multi-domain training than in math-only training.</p>
         </div>
         <div class="visual-grid motivation-grid">
           <article class="analysis-card">
@@ -320,9 +315,10 @@ main > section:not(.hero), .tldr, .plain-summary {
             <div class="equation" aria-label="Covariance of the batch gradient equals within-prompt covariance divided by B plus m times between-prompt covariance divided by B">
               Cov(ĝ) = Σ<sub>w</sub> / B + (m / B) Σ<sub>b</sub>
             </div>
-            <p>Σ<sub>w</sub> and Σ<sub>b</sub> describe within-prompt and between-prompt
-              gradient covariance. Increasing m leaves the first term unchanged and scales up
-              the second. A useful baseline therefore needs to work with few responses per prompt.
+            <p>Σ<sub>w</sub> and Σ<sub>b</sub> are the within-prompt and between-prompt
+              gradient covariance matrices. Increasing m leaves the first term unchanged and
+              increases the second. To retain prompt diversity, we need an accurate baseline
+              from few responses per prompt.
               <a href="https://arxiv.org/html/2605.07579v4#S2.SS2">Section 2.2</a>.</p>
           </article>
           <figure class="figure">
@@ -339,21 +335,21 @@ main > section:not(.hero), .tldr, .plain-summary {
         <div class="section-title">
           <p class="eyebrow">Preliminary</p>
           <h2>Can the actor supply its own value estimate?</h2>
-          <p class="lead">We first test whether a lightweight probe can predict expected verifier
-            reward from the actor's internal signals. On held-out Qwen3-4B / DAPO-Math prompts,
-            the probe reaches Pearson r = 0.870 and MAE = 0.141, compared with r = 0.676 and
+          <p class="lead">We train a lightweight probe to predict expected verifier reward from
+            the actor's internal states. On held-out DAPO-Math prompts with Qwen3-4B,
+            the probe achieves Pearson r = 0.870 and MAE = 0.141, compared with r = 0.676 and
             MAE = 0.262 for a separately trained Qwen3-4B critic.</p>
         </div>
         <figure class="figure probe-figure">
           <a href="assets/value-estimation-v3.svg" target="_blank" rel="noopener noreferrer" title="Open full-size figure"><img src="assets/value-estimation-v3.svg" alt="Probe and critic value predictions against empirical Avg@8 rewards on Qwen3-4B with DAPO-Math" loading="lazy" width="751" height="417"></a>
-          <figcaption class="caption">Predictions are evaluated against empirical Avg@8 rewards.
-            Both estimators use the same reward-labeled training data; the critic reads the prompt,
-            while the probe also observes generated trajectory features.
+          <figcaption class="caption">Value predictions are evaluated against empirical Avg@8 rewards.
+            Both estimators use the same reward-labeled training data. The critic reads the prompt;
+            the probe also uses features from generated trajectories.
             <a href="https://arxiv.org/html/2605.07579v4#S2.F2.fig2">Figure 2</a>.</figcaption>
         </figure>
         <p class="supporting-text">Across five datasets and four backbones, including GPT-OSS-120B,
-          the probe improves MAE in 16 of 20 model–dataset pairs and Pearson correlation in 18 of 20.
-          These experiments assess held-out value prediction; the RL results appear below.</p>
+          the probe has lower MAE than the critic in 16 of 20 model–dataset pairs and higher Pearson
+          correlation in 18 of 20. These comparisons evaluate value prediction on held-out prompts.</p>
         <details class="result-details">
           <summary>Value prediction across domains</summary>
           <p class="detail-intro">Qwen3-4B results across all five datasets. The full comparison also
@@ -381,10 +377,10 @@ main > section:not(.hero), .tldr, .plain-summary {
           <p class="eyebrow">Method</p>
           <h2>Cross-rollout value estimation</h2>
           <p class="lead">
-            Response-dependent features are useful for prediction, but using them as a baseline
-            for that same response can bias the policy gradient. POISE samples two independent
-            responses and computes each one's baseline from the other's features. This preserves
-            the zero-expectation REINFORCE baseline term.
+            A baseline predicted from a response's own features can bias its policy gradient.
+            POISE avoids this dependence by sampling two independent responses to the same prompt
+            and predicting each response's baseline from the other's features. The resulting
+            REINFORCE baseline term has zero expectation.
           </p>
         </div>
 
@@ -392,9 +388,9 @@ main > section:not(.hero), .tldr, .plain-summary {
           <figure class="figure">
             <a href="assets/poise-overview.png" target="_blank" rel="noopener noreferrer" title="Open full-size figure"><img src="assets/poise-overview.png" alt="POISE cross-rollout algorithm diagram" width="1540" height="583"></a>
             <figcaption class="caption">
-              The two responses are independent samples for the same prompt. Each one uses the other
-              response's internal-state features to estimate a baseline. The probe is trained on
-              the other response's reward, targeting expected prompt-level reward.
+              Each response's features predict the other response's reward. Because the responses
+              are sampled independently given the prompt, the probe targets expected prompt-level
+              reward. The predictions serve as cross-rollout baselines for policy optimization.
               <a href="https://arxiv.org/html/2605.07579v4#S3.F3">Figure 3</a>.
             </figcaption>
           </figure>
@@ -417,15 +413,15 @@ main > section:not(.hero), .tldr, .plain-summary {
             <div class="step">
               <b>3</b>
               <div>
-                <h3>Swap predicted values</h3>
-                <p>For each response, subtract the baseline predicted from the other response from its reward.</p>
+                <h3>Compute cross-rollout advantages</h3>
+                <p>For each response, predict a baseline from the other response's features and subtract it from the reward.</p>
               </div>
             </div>
             <div class="step">
               <b>4</b>
               <div>
                 <h3>Update the policy and probe</h3>
-                <p>Compute baselines before fitting on the current batch. Use the fixed advantages in a PPO-style clipped policy update; fit the ridge probe on paired-rollout rewards and recent trajectories.</p>
+                <p>Compute baselines before fitting the probe on the current batch. Update the policy with fixed advantages and a PPO-style clipped objective. Fit the ridge probe on paired-rollout rewards and recent trajectories.</p>
               </div>
             </div>
           </div>
@@ -436,16 +432,15 @@ main > section:not(.hero), .tldr, .plain-summary {
         <div class="section-title">
           <p class="eyebrow">Results</p>
           <h2>Higher overall scores across reasoning domains</h2>
-          <p class="lead">On the six-domain GURU training corpus, POISE achieves the highest overall
-            benchmark average among the main baselines on both backbones: 1.35 points above DAPO
-            on Qwen3-4B and 1.96 points on OLMo-3-7B-Instruct-DPO.</p>
+          <p class="lead">After training on the six-domain GURU corpus, POISE achieves the highest
+            overall benchmark average among the main baselines on both backbones. It exceeds DAPO
+            by 1.35 points on Qwen3-4B and 1.96 points on OLMo-3-7B-Instruct-DPO.</p>
         </div>
         <div class="benchmark-suite">
           <div><h3 class="setup-title">Six training domains, 17 evaluation benchmarks</h3>
-            <p>Training uses 92K verifiable prompts with an equal compute budget across methods.
-              Evaluation covers the six training domains, plus LiveBench and instruction following.
-              Checkpoints are selected on the validation split. POISE and RLOO use two rollouts per
-              prompt; DAPO uses eight.</p></div>
+            <p>We train on 92K verifiable prompts with equal compute budgets and select checkpoints
+              on the validation split. Evaluation covers the six training domains, LiveBench, and
+              instruction following. POISE and RLOO use two rollouts per prompt; DAPO uses eight.</p></div>
           <div class="suite-tags" aria-label="Training domains">
             <span>Math</span><span>Code</span><span>Science</span><span>Logic</span>
             <span>Simulation</span><span>Tabular reasoning</span>
@@ -463,10 +458,11 @@ main > section:not(.hero), .tldr, .plain-summary {
 </div></article>
         </div>
         <p class="notes">All bars use the same 0–100 scale. Source: <a href="https://arxiv.org/html/2605.07579v4#S4.T1">Table 1</a>.</p>
-        <p class="supporting-text"><strong>Value estimation at the same rollout allocation.</strong>
-          RLOO subtracts the paired response's reward; POISE predicts the baseline from its internal
-          states. POISE improves on RLOO by 1.68 points on Qwen3 and 1.60 points on OLMo.
-          Individual benchmarks vary; POISE exceeds both DAPO and RLOO on 11 of 17 benchmarks for each backbone.</p>
+        <p class="supporting-text"><strong>Comparison at the same rollout allocation.</strong>
+          RLOO uses the other response's reward as the baseline; POISE predicts it from that response's
+          internal states. At the same allocation of two rollouts per prompt, POISE exceeds RLOO by
+          1.68 points on Qwen3 and 1.60 points on OLMo. Gains vary by benchmark: POISE exceeds both
+          DAPO and RLOO on 11 of 17 benchmarks for each backbone.</p>
         <details class="result-details">
           <summary>Full results: all 17 benchmarks</summary>
           <p class="notes">Scores reproduced from Table 1. The overall score averages all 17
@@ -518,14 +514,14 @@ main > section:not(.hero), .tldr, .plain-summary {
             while its probe remains predictive as the policy changes.</p>
         <div class="visual-grid">
           <figure class="figure"><a href="assets/gradient-variance-v3.svg" target="_blank" rel="noopener noreferrer" title="Open full-size figure"><img src="assets/gradient-variance-v3.svg" alt="Qwen3-4B Adam-moment variance proxy for POISE, RLOO, and rescaled DAPO" loading="lazy" width="509" height="361"></a>
-            <figcaption class="caption"><strong>Training variance proxy.</strong> Adam-moment estimates are summed
-              across parameters; this is not exact gradient variance. DAPO is rescaled for its
-              advantage normalization.
+            <figcaption class="caption"><strong>Training variance proxy.</strong> We sum Adam-moment estimates
+              across parameters as a proxy for gradient variance and rescale DAPO to account for its
+              advantage normalization. The proxy does not measure exact gradient variance.
               <a href="https://arxiv.org/html/2605.07579v4#S4.F4">Figure 4</a>.</figcaption></figure>
           <figure class="figure"><a href="assets/estimator-tracking-v3.svg" target="_blank" rel="noopener noreferrer" title="Open full-size figure"><img src="assets/estimator-tracking-v3.svg" alt="Value-estimator MAE and Pearson correlation over Qwen3-4B training" loading="lazy" width="486" height="361"></a>
-            <figcaption class="caption"><strong>Online prediction accuracy.</strong> Every 40 training steps, predictions
-              are evaluated against empirical values from eight rollouts per validation prompt.
-              MAE and Pearson correlation remain stable.
+            <figcaption class="caption"><strong>Online prediction accuracy.</strong> We evaluate predictions every
+              40 training steps against empirical values from eight rollouts per validation prompt.
+              MAE and Pearson correlation remain stable as the policy changes.
               <a href="https://arxiv.org/html/2605.07579v4#S4.F5">Figure 5</a>.</figcaption></figure>
         </div>
         </div>
@@ -552,14 +548,14 @@ main > section:not(.hero), .tldr, .plain-summary {
         <div class="section-title">
           <p class="eyebrow">Analysis</p>
           <h2>Which design choices matter?</h2>
-          <p class="lead">Two ablations examine different parts of POISE: which signals help predict
-            value, and how those signals should enter the policy update.</p>
+          <p class="lead">We ablate the probe's input features and the cross-rollout construction
+            to examine their effects on value prediction and policy optimization.</p>
         </div>
         <div class="subsection">
           <h3>Input features: reasoning states and entropy improve prediction</h3>
-          <p>On Qwen3-4B, reasoning states and entropy are more predictive than prompt states alone.
-            Combining all three gives the lowest MAE and highest correlation in this ablation;
-            response length is a weaker predictor.</p>
+          <p>On Qwen3-4B, reasoning states and token entropy each predict value more accurately than
+            prompt states alone. Combining all three gives the lowest MAE and highest Pearson
+            correlation among the tested inputs. Response length is a weaker predictor.</p>
           <div class="table-scroll" tabindex="0" role="region" aria-label="Estimator input-feature ablation">
             <table class="data-table" data-source="S5.tab1">
               <caption>Input features · Table 2</caption>
@@ -576,9 +572,9 @@ main > section:not(.hero), .tldr, .plain-summary {
         </div>
         <div class="subsection">
           <h3>Cross-rollout baselines in policy optimization</h3>
-          <p>In controlled Qwen3-4B math training, full POISE outperforms both the prompt-only
-            and same-rollout variants. The one-rollout variants see twice as many distinct prompts
-            at a fixed rollout budget, so these comparisons also change prompt diversity.</p>
+          <p>In controlled Qwen3-4B math training, full POISE achieves higher scores than the prompt-only
+            and same-rollout variants. Under the fixed rollout budget, these one-rollout variants
+            see twice as many distinct prompts as POISE, so the comparison also varies prompt diversity.</p>
           <div class="table-scroll" tabindex="0" role="region" aria-label="Cross-rollout policy optimization ablation">
             <table class="data-table" data-source="S5.T3">
               <caption>Math RL · Qwen3-4B · Avg@32 over seven benchmarks</caption>
@@ -598,15 +594,15 @@ main > section:not(.hero), .tldr, .plain-summary {
         <details class="result-details">
           <summary>Probe architecture and feature extraction</summary>
           <p class="detail-intro">The linear ridge probe matches or exceeds the tested MLPs in
-            Pearson correlation, although some MLPs have lower MAE. Layer and pooling-window
-            ablations show that value prediction is not confined to a single extraction setting.
+            Pearson correlation, while some MLPs achieve lower MAE. Value prediction also works
+            across the tested extraction layers and pooling windows.
             <a href="https://arxiv.org/html/2605.07579v4#A8.SS3">Extraction ablations</a>;
             <a href="https://arxiv.org/html/2605.07579v4#A8.SS4">probe architectures</a>.</p>
         </details>
-        <p class="scope-note"><strong>Scope.</strong> The experiments use fixed compute budgets;
-          behavior over substantially longer training horizons remains untested. The estimator
-          predicts sequence-level value. Token-level credit assignment, non-verifiable rewards,
-          and long-horizon agentic tasks are future directions.
+        <p class="scope-note"><strong>Scope.</strong> We evaluate POISE under fixed compute budgets;
+          substantially longer training runs remain untested. The estimator predicts sequence-level
+          value. Extending it to token-level credit assignment, non-verifiable rewards, and
+          long-horizon agentic tasks remains future work.
           <a href="https://arxiv.org/html/2605.07579v4#S7">Limitations</a>.</p>
       </section>
 
