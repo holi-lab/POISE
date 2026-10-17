@@ -109,6 +109,8 @@ strong, b { font-weight: 600; }
 .nav a:hover { color: var(--text); text-decoration: underline; }
 main { max-width: 1000px; margin: 0 auto; padding: 0 20px 36px; }
 main > section { padding: 44px 0 8px; }
+main > section:not(.hero) { position: relative; }
+main > section:not(.hero)::before { content: ""; position: absolute; top: 20px; left: 0; right: 0; border-top: 1px solid #ececf0; }
 main > .hero { padding: 0; }
 .hero-inner { padding: 52px 0 28px; text-align: center; }
 h1 { max-width: 30ch; margin: 0 auto 18px; font-size: clamp(1.7rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.2; text-wrap: balance; }
