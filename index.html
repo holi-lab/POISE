@@ -75,6 +75,7 @@
   --primary: #3273dc;
   --border: #dcdde3;
   --surface: #f5f5f7;
+  --reading-width: 660px;
   --poise: #2474b5;
   --dapo: #7a5195;
   --rloo: #c0392b;
@@ -191,6 +192,15 @@ code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
 .detail-block p { margin: 0; font-size: 14px; }
 .scope-note { margin: 30px 0 0; padding-top: 18px; border-top: 1px solid var(--border); font-size: 14px; color: var(--muted); }
 .prediction-table { min-width: 480px; }
+/* Keep prose compact while giving figures and tables room for their labels. */
+.tldr, .plain-summary, .section-title,
+main > section > p, .benchmark-suite,
+.subsection > h3, .subsection > p,
+.steps, .result-details, pre {
+  max-width: var(--reading-width);
+  margin-left: auto;
+  margin-right: auto;
+}
 @media (max-width: 760px) {
   .nav a { padding: 5px 7px; }
   .nav a.optional { display: none; }
