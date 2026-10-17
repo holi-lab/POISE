@@ -137,7 +137,8 @@ h3 { margin: 26px 0 8px; font-size: 17.6px; font-weight: 600; line-height: 1.4; 
 .figure > a { display: block; cursor: zoom-in; }
 .caption { margin: 10px 0 0; font-size: 13.5px; color: var(--muted); line-height: 1.55; }
 .visual-grid, .result-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 24px 0 0; align-items: start; }
-.motivation-grid { align-items: start; }
+.visual-grid { grid-template-columns: minmax(0, 1fr); }
+.visual-grid > .figure { width: 100%; max-width: 550px; margin: 0 auto; }
 .equation { padding: 14px 8px; background: var(--surface); text-align: center; font-family: Georgia, serif; font-size: 20px; margin: 16px 0; }
 .method-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 24px; }
 .analysis-card { min-width: 0; }
@@ -180,7 +181,7 @@ h3 { margin: 26px 0 8px; font-size: 17.6px; font-weight: 600; line-height: 1.4; 
 .result-details[open] summary { margin-bottom: 10px; }
 pre { margin: 0; padding: 18px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
 code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
-.probe-figure { max-width: 760px; margin: 24px auto 0; }
+.probe-figure { margin: 24px auto 0; }
 .supporting-text { margin: 22px 0 0; }
 .subsection { margin-top: 30px; }
 .subsection > h3 { margin: 0 0 10px; }
@@ -192,11 +193,8 @@ code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
 .detail-block p { margin: 0; font-size: 14px; }
 .scope-note { margin: 30px 0 0; padding-top: 18px; border-top: 1px solid var(--border); font-size: 14px; color: var(--muted); }
 .prediction-table { min-width: 480px; }
-/* Keep prose compact while giving figures and tables room for their labels. */
-.tldr, .plain-summary, .section-title,
-main > section > p, .benchmark-suite,
-.subsection > h3, .subsection > p,
-.steps, .result-details, pre {
+/* Align text, figures, and tables within the same reading column. */
+main > section:not(.hero), .tldr, .plain-summary {
   max-width: var(--reading-width);
   margin-left: auto;
   margin-right: auto;
@@ -207,7 +205,6 @@ main > section > p, .benchmark-suite,
   .visual-grid, .result-grid { grid-template-columns: 1fr; gap: 22px; }
   .hero-inner { padding-top: 36px; }
   .paper-subtitle { font-size: 19px; }
-  .motivation-grid > .figure { max-width: 550px; width: 100%; margin: 0 auto; }
 }
 @media (max-width: 480px) {
   main, .topbar-inner { padding-left: 18px; padding-right: 18px; }
