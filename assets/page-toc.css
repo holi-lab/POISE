@@ -1,0 +1,27 @@
+html { scroll-padding-top: 76px; scroll-behavior: smooth; }
+html main[id], html main [id] { scroll-margin-top: 0; }
+.topbar .topbar-inner { justify-content: space-between; }
+.topbar .brand { display: block; max-width: calc(100% - 125px); overflow: hidden; text-overflow: ellipsis; }
+.page-toc { --toc-accent: #4859a3; }
+.page-toc summary { display: flex; align-items: center; gap: 8px; padding: 12px 0; color: var(--muted); font-size: 13px; cursor: pointer; list-style: none; }
+.page-toc summary::-webkit-details-marker { display: none; }
+.page-toc summary::after { content: ""; width: 6px; height: 6px; margin: -3px 3px 0 4px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); }
+.page-toc[open] summary::after { margin-top: 3px; transform: rotate(225deg); }
+.toc-current { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
+.toc-current:not(:empty)::before { content: "/"; margin-right: 8px; color: #a2a2aa; }
+.page-toc nav { position: absolute; top: 100%; left: 20px; right: 20px; display: block; max-height: calc(100dvh - 80px); overflow-y: auto; overscroll-behavior: contain; padding: 12px; background: #fff; border: 1px solid var(--border); }
+.page-toc .toc-title { display: none; }
+.page-toc nav a { display: block; padding: 9px 12px; border-left: 2px solid transparent; color: var(--muted); font-size: 13px; line-height: 1.5; white-space: normal; }
+.page-toc nav a:hover { color: var(--text); background: #f7f7f9; text-decoration: none; }
+.page-toc nav a[aria-current="location"] { border-left-color: var(--toc-accent); color: var(--text); background: #f2f3f6; font-weight: 600; }
+@media (max-width: 600px) { .toc-current { display: none; } }
+@media (min-width: 1200px) {
+  .page-toc { position: fixed; top: 88px; left: calc(50% - 568px); width: 184px; }
+  .page-toc summary { display: none; }
+  .page-toc nav { position: static; max-height: calc(100dvh - 112px); padding: 0; border: 0; }
+  .page-toc .toc-title { display: block; margin: 0 0 12px; padding-left: 14px; color: var(--text); font-size: 12px; font-weight: 600; }
+  .page-toc nav a { padding-top: 7px; padding-bottom: 7px; }
+  .hero-inner { max-width: var(--reading-width); margin-left: auto; margin-right: auto; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print { .topbar, .page-toc { display: none; } }

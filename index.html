@@ -230,20 +230,29 @@ main > section:not(.hero), .tldr, .plain-summary {
   .equation { font-size: 18px; }
 }
     </style>
+    <link rel="stylesheet" href="assets/page-toc.css?v=1">
+    <script src="assets/page-toc.js?v=1" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#top">Skip to content</a>
     <header class="topbar">
       <div class="topbar-inner">
         <a class="brand" href="#top" aria-label="POISE home">POISE</a>
-        <nav class="nav" aria-label="Page navigation">
-          <a class="optional" href="#plain">Overview</a>
-          <a class="optional" href="#probe">Preliminary</a>
-          <a href="#method">Method</a>
-          <a href="#results">Results</a>
-          <a href="#analysis">Analysis</a>
-          <a href="#cite">BibTeX</a>
-        </nav>
+        <details class="page-toc" open>
+          <summary>Contents <span class="toc-current" aria-hidden="true"></span></summary>
+          <nav aria-label="Table of contents">
+            <p class="toc-title">Contents</p>
+            <a href="#top">Top</a>
+            <a href="#tldr">TL;DR</a>
+            <a href="#plain">Overview</a>
+            <a href="#introduction">Motivation</a>
+            <a href="#probe">Preliminary</a>
+            <a href="#method">Method</a>
+            <a href="#results">Results</a>
+            <a href="#analysis">Analysis</a>
+            <a href="#cite">BibTeX</a>
+          </nav>
+        </details>
       </div>
     </header>
 
@@ -268,7 +277,7 @@ main > section:not(.hero), .tldr, .plain-summary {
             <a class="button citation" href="#cite">BibTeX</a>
           </div>
 
-          <div class="tldr">
+          <div class="tldr" id="tldr">
             <h2>TL;DR</h2>
             <p>
               Policy Optimization with Internal State Value Estimation (POISE) learns a value
