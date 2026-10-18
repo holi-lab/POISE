@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>POISE</title>
+  <rect width="64" height="64" rx="12" fill="#1e1e22"/>
+  <path d="M21 47V17h13a10 10 0 0 1 0 20H21" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
